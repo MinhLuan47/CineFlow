@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Menu, X, Film, Compass, Tv, Play, LogIn, CreditCard } from "lucide-react";
 import { cn } from "../lib/utils";
+import { Button } from "./Button";
 
 /**
  * Thành phần Header (Thanh điều hướng) của CineFlow.
@@ -79,15 +80,21 @@ export const Header: React.FC = () => {
 
         {/* Cụm nút hành động bên phải (Desktop) */}
         <div className="hidden md:flex items-center gap-4">
-          <button className="flex items-center gap-1.5 text-muted hover:text-text px-4 py-2 text-sm font-semibold transition-colors">
-            <LogIn className="w-4 h-4" />
-            <span>Đăng nhập</span>
-          </button>
+          <Button
+            variant="ghost"
+            size="sm"
+            icon={<LogIn className="w-4 h-4" />}
+          >
+            Đăng nhập
+          </Button>
           
-          <button className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-text px-5 py-2.5 text-sm font-bold tracking-wide uppercase transition-all duration-300 rounded-sharp shadow-lg shadow-primary/20 hover:scale-105 active:scale-95">
-            <Play className="w-4 h-4 fill-current" />
-            <span>Xem ngay</span>
-          </button>
+          <Button
+            variant="primary"
+            size="sm"
+            icon={<Play className="w-4 h-4 fill-current" />}
+          >
+            Xem ngay
+          </Button>
         </div>
 
         {/* Nút Hamburger cho thiết bị di động */}
@@ -123,21 +130,25 @@ export const Header: React.FC = () => {
           </nav>
 
           <div className="flex flex-col gap-4 mt-8">
-            <button 
+            <Button
+              variant="secondary"
+              size="md"
+              className="w-full"
+              icon={<LogIn className="w-5 h-5" />}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="flex items-center justify-center gap-2 border border-themeBorder bg-surface hover:bg-themeBorder py-3.5 text-base font-bold tracking-wide transition-all rounded-sharp"
             >
-              <LogIn className="w-5 h-5" />
-              <span>Đăng nhập thành viên</span>
-            </button>
+              Đăng nhập thành viên
+            </Button>
             
-            <button 
+            <Button
+              variant="primary"
+              size="md"
+              className="w-full"
+              icon={<Play className="w-5 h-5 fill-current" />}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-text py-4 text-base font-bold tracking-wide uppercase transition-all rounded-sharp shadow-lg shadow-primary/20"
             >
-              <Play className="w-5 h-5 fill-current" />
-              <span>Xem ngay</span>
-            </button>
+              Xem ngay
+            </Button>
           </div>
         </div>
       )}

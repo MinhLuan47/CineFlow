@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 
 // Ép kiểu ReactPlayer thành any để tránh lỗi định nghĩa JSX namespace trong React 19
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Player = ReactPlayer as any;
 
 interface VideoPlayerProps {
@@ -35,8 +36,9 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const [subtitlesEnabled, setSubtitlesEnabled] = useState<boolean>(true);
   const [showControls, setShowControls] = useState<boolean>(true);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const playerRef = useRef<any>(null);
-  const controlsTimeoutRef = useRef<any>(null);
+  const controlsTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const qualities = ["720p", "1080p", "4K UHD"];
 

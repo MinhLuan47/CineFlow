@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus, HelpCircle } from "lucide-react";
+import { Container, SectionHeader } from "../components";
 
 interface FAQItem {
   question: string;
@@ -9,18 +10,11 @@ interface FAQItem {
 
 /**
  * Phần "Câu Hỏi Thường Gặp" (FAQ Accordion Section).
- * Tính năng chính:
- * - Hệ thống Accordion đóng mở mượt mà sử dụng React State.
- * - Chỉ cho phép mở tối đa 1 câu hỏi tại một thời điểm (Single open state).
- * - Sử dụng biểu tượng `Plus` và `Minus` từ Lucide React để điều hướng.
- * - Hoạt ảnh đóng mở chiều cao và độ mờ (Height and Opacity transitions) mượt mà từ Framer Motion.
- * - Phong cách thiết kế kính mờ tối giản chuẩn điện ảnh (Dark Glassmorphism).
+ * - Sử dụng Container và SectionHeader thống nhất.
  */
 export const FAQ: React.FC = () => {
-  // Trạng thái lưu trữ vị trí câu hỏi đang được mở rộng (null nghĩa là đóng toàn bộ)
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  // Danh sách 6 câu hỏi và câu trả lời tiếng Việt chuẩn hóa
   const faqData: FAQItem[] = [
     {
       question: "Tôi có thể xem phim miễn phí trên CineFlow không?",
@@ -48,12 +42,10 @@ export const FAQ: React.FC = () => {
     },
   ];
 
-  // Hàm chuyển đổi đóng mở câu hỏi
   const toggleAccordion = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  // Cấu hình hoạt ảnh danh sách câu hỏi so le
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -70,26 +62,15 @@ export const FAQ: React.FC = () => {
   };
 
   return (
-    <section className="container-custom py-16 md:py-24 relative z-20 border-t border-themeBorder/40">
-      
-      {/* Tiêu đề Section */}
-      <div className="flex flex-col gap-2 mb-12 text-center">
-        <div className="flex items-center justify-center gap-2 text-primary font-bold text-xs uppercase tracking-widest">
-          <HelpCircle className="w-4 h-4 text-primary animate-pulse" />
-          <span>Giải đáp thắc mắc</span>
-        </div>
-        <h2 className="font-display font-black text-3xl md:text-5xl tracking-tight uppercase text-text">
-          Câu Hỏi Thường Gặp
-        </h2>
-        <p className="text-muted text-sm md:text-base max-w-xl mx-auto">
-          Mọi thắc mắc của bạn về tài khoản, gói cước dịch vụ và tính năng trải nghiệm xem phim của CineFlow đều được trả lời tại đây.
-        </p>
-      </div>
+    <Container py="md" borderTop>
+      <SectionHeader
+        accentIcon={<HelpCircle className="w-4 h-4 text-primary animate-pulse" />}
+        accentText="Giải đáp thắc mắc"
+        title="Câu Hỏi Thường Gặp"
+        subtitle="Mọi thắc mắc của bạn về tài khoản, gói cước dịch vụ và tính năng trải nghiệm xem phim của CineFlow đều được trả lời tại đây."
+        align="center"
+      />
 
-      {/* 
-        Danh sách Accordion (FAQ List)
-        Giới hạn độ rộng tối đa max-w-3xl để tạo sự tập trung trực quan tốt nhất.
-      */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -110,7 +91,6 @@ export const FAQ: React.FC = () => {
                   : "bg-surface/30 border-themeBorder hover:border-themeBorder/80"
               }`}
             >
-              {/* Nút tiêu đề câu hỏi (Accordion Header Trigger) */}
               <button
                 onClick={() => toggleAccordion(index)}
                 className="w-full flex items-center justify-between text-left p-5 focus:outline-none group"
@@ -121,7 +101,6 @@ export const FAQ: React.FC = () => {
                   {faq.question}
                 </span>
                 
-                {/* Icon xoay đổi mượt mà biểu thị trạng thái mở/đóng */}
                 <span className={`flex-shrink-0 ml-4 p-1 rounded-sharp border border-themeBorder bg-background/50 text-muted group-hover:text-text transition-transform duration-300 ${
                   isOpen ? "rotate-180 border-primary/20 text-primary" : ""
                 }`}>
@@ -133,7 +112,6 @@ export const FAQ: React.FC = () => {
                 </span>
               </button>
 
-              {/* Nội dung câu trả lời (Accordion Content Panel) */}
               <AnimatePresence initial={false}>
                 {isOpen && (
                   <motion.div
@@ -153,7 +131,6 @@ export const FAQ: React.FC = () => {
           );
         })}
       </motion.div>
-
-    </section>
+    </Container>
   );
 };

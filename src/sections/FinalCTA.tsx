@@ -1,45 +1,30 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Play, Sparkles, Film } from "lucide-react";
+import { Container, Button } from "../components";
 import { SAMPLE_MOVIES } from "../data/movies";
 
 /**
  * Phần Kêu Gọi Hành Động Cuối Trang (Final CTA Section).
- * Tính năng chính:
- * - Headline: "Sẵn Sàng Cho Buổi Tối Xem Phim Tiếp Theo?"
- * - Subtitle tiếng Việt giới thiệu kho tài nguyên phim đồ sộ.
- * - Nút bấm hành động nổi bật ("Bắt Đầu Xem Ngay") tích hợp quầng phát sáng khi rê chuột.
- * - Hiển thị 3 thẻ phim (Poster Cards) lơ lửng, xếp chồng bất đối xứng nghiêng 3D ở cột phải trên desktop.
- * - Hoạt ảnh nổi trôi liên tục (Floating loop animation) tạo cảm giác chiều sâu điện ảnh.
- * - Đáp ứng responsive: Ẩn hoặc thu nhỏ làm nền chìm trên mobile.
+ * - Sử dụng Container và Button dùng chung.
  */
 export const FinalCTA: React.FC = () => {
-  // Chọn 3 poster phim đẹp nhất từ dữ liệu mẫu để làm hình trang trí nổi
   const displayPosters = [
-    SAMPLE_MOVIES[0]?.poster, // Vòng Xoáy Thời Không
-    SAMPLE_MOVIES[5]?.poster, // Vũ Trụ Vô Tận
-    SAMPLE_MOVIES[2]?.poster  // Âm Điệu Hoàng Kim
+    SAMPLE_MOVIES[0]?.poster,
+    SAMPLE_MOVIES[5]?.poster,
+    SAMPLE_MOVIES[2]?.poster
   ];
 
   return (
-    <section className="container-custom py-16 md:py-28 relative overflow-hidden z-20">
-      
-      {/* 
-        Quầng sáng Gradient huyền ảo làm nền phía sau (Background Gradient Glow)
-        Tập trung ánh đỏ mờ ở giữa để làm nổi bật khối CTA.
-      */}
+    <Container py="none" className="pb-16 md:pb-24 overflow-hidden">
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] rounded-full bg-primary/5 blur-[150px] pointer-events-none" />
       <div className="absolute right-[-10%] top-[-10%] w-[30%] h-[60%] rounded-full bg-ember/5 blur-[100px] pointer-events-none" />
 
-      {/* Thẻ bao ngoài dạng kính mờ tinh tế viền 1px */}
       <div className="relative border border-themeBorder bg-surface/40 p-8 md:p-16 overflow-hidden rounded-sharp">
-        
-        {/* Lưới 2 cột trên Desktop (lg) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
           
-          {/* Cột trái (lg:col-span-7): Nội dung & CTA */}
+          {/* Cột trái: Nội dung & CTA */}
           <div className="lg:col-span-7 text-center lg:text-left flex flex-col gap-6 items-center lg:items-start max-w-xl mx-auto lg:mx-0">
-            
             <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest">
               <Film className="w-4 h-4" />
               <span>Khởi đầu hành trình điện ảnh</span>
@@ -53,33 +38,26 @@ export const FinalCTA: React.FC = () => {
               Khám phá hàng ngàn bộ phim điện ảnh bom tấn, phim bộ dài tập độc quyền và anime sinh động trên một nền tảng rạp phim trực tuyến duy nhất. Trải nghiệm không giới hạn ngay hôm nay.
             </p>
 
-            {/* Nút bấm Kêu gọi hành động chính */}
             <div className="mt-4 w-full sm:w-auto">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full sm:w-auto relative group overflow-hidden bg-primary hover:bg-primary-dark text-text px-8 py-4 text-sm font-black uppercase tracking-wider transition-colors duration-300 rounded-sharp flex items-center justify-center gap-3 shadow-xl shadow-primary/20"
+              <Button
+                variant="primary"
+                size="lg"
+                className="w-full sm:w-auto relative group overflow-hidden"
+                icon={<Play className="w-4 h-4 fill-current ml-0.5" />}
               >
-                {/* Ánh sáng quét ngang qua nút khi hover */}
                 <div className="absolute inset-0 w-1/2 h-full bg-white/10 -skew-x-12 -translate-x-full group-hover:animate-shine pointer-events-none" />
-                
-                <Play className="w-4 h-4 fill-current ml-0.5" />
                 <span>Bắt Đầu Xem Ngay</span>
-              </motion.button>
+              </Button>
             </div>
 
-            {/* Ghi chú nhỏ */}
             <div className="flex items-center gap-1.5 text-xs text-muted/80 mt-1">
               <Sparkles className="w-3.5 h-3.5 text-gold" />
               <span>Dùng thử miễn phí 7 ngày gói VIP Premium</span>
             </div>
-
           </div>
 
-          {/* Cột phải (lg:col-span-5): 3 Thẻ poster phim lơ lửng 3D xếp chồng */}
+          {/* Cột phải: 3 Thẻ poster phim lơ lửng 3D */}
           <div className="lg:col-span-5 relative w-full h-[280px] sm:h-[350px] lg:h-[400px] flex items-center justify-center select-none mt-6 lg:mt-0">
-            
-            {/* Poster 1: Nằm dưới cùng bên trái */}
             <motion.div
               animate={{
                 y: [0, -12, 0],
@@ -100,7 +78,6 @@ export const FinalCTA: React.FC = () => {
               />
             </motion.div>
 
-            {/* Poster 2: Nằm trên cùng ở giữa, nổi bật nhất */}
             <motion.div
               animate={{
                 y: [-15, 0, -15],
@@ -122,7 +99,6 @@ export const FinalCTA: React.FC = () => {
               <div className="absolute inset-0 border border-primary/20 pointer-events-none rounded-sharp" />
             </motion.div>
 
-            {/* Poster 3: Nằm bên phải phía dưới */}
             <motion.div
               animate={{
                 y: [0, -10, 0],
@@ -142,13 +118,10 @@ export const FinalCTA: React.FC = () => {
                 className="w-full h-full object-cover opacity-70"
               />
             </motion.div>
-
           </div>
 
         </div>
-
       </div>
-
-    </section>
+    </Container>
   );
 };

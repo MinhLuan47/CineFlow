@@ -1,5 +1,6 @@
 import React from "react";
 import { Film, ArrowUp } from "lucide-react";
+import { Button } from "./Button";
 
 /**
  * Thành phần Footer của CineFlow.
@@ -125,13 +126,16 @@ export const Footer: React.FC = () => {
         </p>
 
         {/* Nút Cuộn Lên Đầu Trang thiết kế tinh gọn sharp 2px */}
-        <button
+        <Button
+          variant="outline"
+          size="sm"
           onClick={scrollToTop}
-          className="flex items-center gap-2 border border-themeBorder bg-background hover:bg-themeBorder hover:border-primary text-xs font-semibold px-4 py-2.5 transition-all duration-300 rounded-sharp group"
+          className="group"
+          icon={<ArrowUp className="w-4 h-4 text-primary group-hover:-translate-y-1 transition-transform" />}
+          iconPosition="right"
         >
-          <span>Cuộn lên đầu</span>
-          <ArrowUp className="w-4 h-4 text-primary group-hover:-translate-y-1 transition-transform" />
-        </button>
+          Cuộn lên đầu
+        </Button>
 
       </div>
     </footer>

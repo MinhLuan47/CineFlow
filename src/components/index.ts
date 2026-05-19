@@ -5,3 +5,7 @@ export { Footer } from "./Footer";
 export { MovieCard } from "./MovieCard";
 export { EpisodeList } from "./EpisodeList";
 export { VideoPlayer } from "./VideoPlayer";
+export { Badge } from "./Badge";
+export { Button } from "./Button";
+export { SectionHeader } from "./SectionHeader";
+export { Container } from "./Container";
