@@ -4,3 +4,4 @@ export { MovieLibrary } from "./MovieLibrary";
 export { PlayerPreview } from "./PlayerPreview";
 export { TopRanking } from "./TopRanking";
 export { FAQ } from "./FAQ";
+export { FinalCTA } from "./FinalCTA";

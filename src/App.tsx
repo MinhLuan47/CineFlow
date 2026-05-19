@@ -1,5 +1,5 @@
 import { Layout, Hero } from "./components";
-import { FeaturedMovies, BrowseGenres, MovieLibrary, PlayerPreview, TopRanking, FAQ } from "./sections";
+import { FeaturedMovies, BrowseGenres, MovieLibrary, PlayerPreview, TopRanking, FAQ, FinalCTA } from "./sections";
 import { Monitor, Smartphone, Sparkles, Flame, ShieldAlert } from "lucide-react";
 
 /**
@@ -126,32 +126,10 @@ function App() {
       </section>
 
       {/* 
-        Khung đăng ký trải nghiệm nhanh (Mini CTA Block)
-        Thiết kế dạng khối nền dẹt tinh giản góc cạnh 2px.
+        Khung Kêu gọi Hành động cuối trang (Final CTA Block)
+        Thiết kế hiện đại với quầng sáng gradient và các poster phim lơ lửng 3D.
       */}
-      <section className="container-custom pb-24">
-        <div className="relative border border-themeBorder bg-surface/50 p-8 md:p-12 overflow-hidden rounded-sharp">
-          {/* Quầng sáng cam mờ ảo trong thẻ */}
-          <div className="absolute right-[-10%] top-[-20%] w-[40%] h-[150%] rounded-full bg-ember/5 blur-3xl pointer-events-none" />
-          
-          <div className="relative z-10 max-w-xl">
-            <h3 className="font-display font-bold text-2xl md:text-3xl text-text mb-4">Sẵn sàng trải nghiệm điện ảnh chân thực?</h3>
-            <p className="text-sm text-muted mb-8 leading-relaxed">
-              Đăng ký nhận thông tin ra mắt và trải nghiệm dùng thử miễn phí 7 ngày gói VIP Premium ngay khi hệ thống CineFlow đi vào hoạt động chính thức.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="email"
-                placeholder="Nhập email của bạn..."
-                className="bg-background border border-themeBorder text-sm text-text placeholder:text-muted/50 px-4 py-3 w-full focus:outline-none focus:border-primary rounded-sharp"
-              />
-              <button className="bg-primary hover:bg-primary-dark text-text text-sm font-bold tracking-wider uppercase px-6 py-3 transition-colors flex-shrink-0 rounded-sharp">
-                Đăng ký ngay
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <FinalCTA />
     </Layout>
   );
 }
