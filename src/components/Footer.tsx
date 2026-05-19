@@ -1,22 +1,15 @@
 import React from "react";
-import { Film, ArrowUp } from "lucide-react";
-import { Button } from "./Button";
+import { Film } from "lucide-react";
 
 /**
  * Thành phần Footer của CineFlow.
  * Tính năng:
  * - Logo rạp chiếu phim và mô tả tiếng Việt.
  * - Phân chia 3 cột danh sách liên kết tiện ích (Thể loại, Dịch vụ, Hỗ trợ).
- * - Nút "Cuộn lên đầu trang" và biểu tượng mạng xã hội.
+ * - Biểu tượng mạng xã hội.
  * - Dòng bản quyền tiếng Việt.
  */
 export const Footer: React.FC = () => {
-  
-  // Hàm cuộn lên đầu trang mượt mà
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   const footerSections = [
     {
       title: "Thể loại phim",
@@ -118,24 +111,12 @@ export const Footer: React.FC = () => {
       </div>
 
       {/* Đường phân chia mảnh nét cạnh (Sharp Line) */}
-      <div className="container-custom border-t border-themeBorder/60 pt-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div className="container-custom border-t border-themeBorder/60 pt-8 flex items-center justify-center sm:justify-between gap-6">
         
         {/* Dòng chữ bản quyền */}
         <p className="text-xs text-muted/80 text-center sm:text-left">
           &copy; {new Date().getFullYear()} CineFlow Inc. Bảo lưu mọi quyền hành. Dự án xây dựng trên nền tảng React + Tailwind CSS.
         </p>
-
-        {/* Nút Cuộn Lên Đầu Trang thiết kế tinh gọn sharp 2px */}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={scrollToTop}
-          className="group"
-          icon={<ArrowUp className="w-4 h-4 text-primary group-hover:-translate-y-1 transition-transform" />}
-          iconPosition="right"
-        >
-          Cuộn lên đầu
-        </Button>
 
       </div>
     </footer>

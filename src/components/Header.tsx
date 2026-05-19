@@ -50,7 +50,7 @@ export const Header: React.FC = () => {
       )}
     >
       <div className="container-custom flex items-center justify-between">
-        
+
         {/* Logo CineFlow phong cách cinematic */}
         <a href="/" className="flex items-center gap-2 group z-50">
           <Film className="w-8 h-8 text-primary group-hover:text-gold transition-colors duration-300" />
@@ -81,13 +81,13 @@ export const Header: React.FC = () => {
         {/* Cụm nút hành động bên phải (Desktop) */}
         <div className="hidden md:flex items-center gap-4">
           <Button
-            variant="ghost"
+            variant="secondary"
             size="sm"
             icon={<LogIn className="w-4 h-4" />}
           >
             Đăng nhập
           </Button>
-          
+
           <Button
             variant="primary"
             size="sm"
@@ -139,7 +139,7 @@ export const Header: React.FC = () => {
             >
               Đăng nhập thành viên
             </Button>
-            
+
             <Button
               variant="primary"
               size="md"

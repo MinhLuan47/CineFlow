@@ -1,6 +1,7 @@
 import React from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+import { ScrollToTop } from "./ScrollToTop";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -46,6 +47,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       {/* Thành phần Chân trang (Footer) */}
       <Footer />
+
+      {/* Nút cuộn lên đầu trang lơ lửng ở góc dưới bên phải */}
+      <ScrollToTop />
     </div>
   );
 };

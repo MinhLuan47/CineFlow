@@ -9,3 +9,5 @@ export { Badge } from "./Badge";
 export { Button } from "./Button";
 export { SectionHeader } from "./SectionHeader";
 export { Container } from "./Container";
+export { ScrollToTop } from "./ScrollToTop";
+
