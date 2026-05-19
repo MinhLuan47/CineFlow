@@ -1,9 +1,10 @@
 import { Layout, Hero } from "./components";
+import { FeaturedMovies } from "./sections";
 import { Monitor, Smartphone, Sparkles, Flame, ShieldAlert } from "lucide-react";
 
 /**
  * Trang App chính - Thiết lập khung bố cục landing page cơ bản (Base Layout Shell).
- * Phiên bản này tải phần Hero điện ảnh và hiển thị các khối tính năng cơ bản của CineFlow.
+ * Phiên bản này tải phần Hero điện ảnh, phần Phim Nổi bật và hiển thị các khối tính năng cơ bản của CineFlow.
  */
 function App() {
   return (
@@ -14,6 +15,12 @@ function App() {
         tích hợp Badges chất lượng cao và giao diện kính mờ Glassmorphism.
       */}
       <Hero />
+
+      {/* 
+        Thành phần Phim đề cử nổi bật (Featured Movies)
+        Hiển thị lưới phim đa dạng thể loại cùng bộ lọc ngang mượt mà.
+      */}
+      <FeaturedMovies />
       {/* 
         Khối Banner Thông Báo (Alert Banner)
         Thiết kế tối giản viền sắc nét chỉ 1px đỏ thẫm để thu hút sự chú ý nhẹ nhàng.
