@@ -42,7 +42,7 @@ export const ScrollToTop: React.FC = () => {
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full flex items-center justify-center bg-primary-dark  text-text border border-primary/40 shadow-[0_0_20px_rgba(229,9,20,0.3)] hover:shadow-[0_0_30px_rgba(229,9,20,0.5)] transition-all duration-300 cursor-pointer focus:outline-none"
+          className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full flex items-center justify-center bg-primary-dark text-text border border-primary/40 shadow-[0_0_20px_rgba(229,9,20,0.3)] hover:shadow-[0_0_30px_rgba(229,9,20,0.5)] transition-all duration-300 cursor-pointer focus:outline-none"
           aria-label="Cuộn lên đầu trang"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
