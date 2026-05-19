@@ -1,10 +1,10 @@
 import { Layout, Hero } from "./components";
-import { FeaturedMovies, BrowseGenres, MovieLibrary, PlayerPreview } from "./sections";
+import { FeaturedMovies, BrowseGenres, MovieLibrary, PlayerPreview, TopRanking } from "./sections";
 import { Monitor, Smartphone, Sparkles, Flame, ShieldAlert } from "lucide-react";
 
 /**
  * Trang App chính - Thiết lập khung bố cục landing page cơ bản (Base Layout Shell).
- * Phiên bản này tải phần Hero điện ảnh, phần Phim Nổi bật, phần Thể loại phim, phần Thư viện điện ảnh, trình phát phim trải nghiệm và hiển thị các khối tính năng cơ bản của CineFlow.
+ * Phiên bản này tải phần Hero điện ảnh, phần Phim Nổi bật, phần Thể loại phim, phần Thư viện điện ảnh, trình phát phim trải nghiệm, bảng xếp hạng phim thịnh hành và hiển thị các khối tính năng cơ bản của CineFlow.
  */
 function App() {
   return (
@@ -39,6 +39,12 @@ function App() {
         Hiển thị trình phát phim cao cấp tùy chỉnh bộ điều khiển kính mờ và danh sách tập.
       */}
       <PlayerPreview />
+
+      {/* 
+        Thành phần Bảng xếp hạng phim tuần này (Top Ranking)
+        Hiển thị danh sách Top 10 bộ phim được xem nhiều nhất tuần qua.
+      */}
+      <TopRanking />
       {/* 
         Khối Banner Thông Báo (Alert Banner)
         Thiết kế tối giản viền sắc nét chỉ 1px đỏ thẫm để thu hút sự chú ý nhẹ nhàng.

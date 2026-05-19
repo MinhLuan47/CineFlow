@@ -126,5 +126,35 @@ export const SAMPLE_MOVIES: Movie[] = [
     quality: "FHD",
     subtitle: "Vietsub",
     views: 189000
+  },
+  {
+    id: "9",
+    title: "Vùng Đất Câm Lặng: Kẻ Sống Sót",
+    originalTitle: "Silent Lands",
+    description: "Sau thảm họa sinh học quét sạch phần lớn nhân loại, một nhóm người sống sót cố gắng di cư đến thung lũng an toàn, nơi loài quái thú định vị bằng âm thanh chưa xâm chiếm.",
+    poster: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=600&auto=format&fit=crop&q=80",
+    backdrop: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1600&auto=format&fit=crop&q=80",
+    year: 2025,
+    genre: ["Kinh Dị", "Hành Động", "Sinh Tồn"],
+    rating: 7.9,
+    duration: "1h 48m",
+    quality: "FHD",
+    subtitle: "Vietsub",
+    views: 112000
+  },
+  {
+    id: "10",
+    title: "Hào Quang Đô Thị",
+    originalTitle: "City Lights",
+    description: "Bộ phim tâm lý hiện thực phản ánh cuộc sống bon chen, khát vọng vươn lên của những bạn trẻ tỉnh lẻ lập nghiệp tại đô thị phồn hoa bậc nhất nước.",
+    poster: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&auto=format&fit=crop&q=80",
+    backdrop: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=1600&auto=format&fit=crop&q=80",
+    year: 2024,
+    genre: ["Tâm Lý", "Đời Thường"],
+    rating: 8.1,
+    duration: "2h 00m",
+    quality: "FHD",
+    subtitle: "Thuyết Minh",
+    views: 73000
   }
 ];
