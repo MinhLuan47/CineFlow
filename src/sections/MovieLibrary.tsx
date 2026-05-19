@@ -156,7 +156,7 @@ export const MovieLibrary: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Tìm phim, thể loại hoặc năm sản xuất..."
-            className="w-full bg-surface/30 backdrop-blur-sm border border-themeBorder/80 text-xs text-text placeholder:text-muted/50 pl-10 pr-9 py-3 focus:outline-none focus:border-primary focus:bg-surface/50 transition-all rounded-sharp"
+            className="w-full bg-surface border border-themeBorder/80 text-xs text-text placeholder:text-muted/50 pl-10 pr-9 py-3 focus:outline-none focus:border-primary focus:bg-card transition-all rounded-sharp"
           />
           {searchQuery && (
             <button
