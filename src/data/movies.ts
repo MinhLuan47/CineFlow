@@ -1,53 +1,130 @@
 import type { Movie } from "../types/movie";
 
 /**
- * Danh sách phim mẫu chất lượng cao cho CineFlow.
- * Sử dụng hình ảnh từ Unsplash đại diện cho các tác phẩm điện ảnh thực tế.
+ * Danh sách dữ liệu phim giả lập (Fake Movie Data) chất lượng cao cho CineFlow.
+ * Sử dụng hình ảnh bản quyền tự do từ Unsplash mô phỏng hình ảnh điện ảnh nghệ thuật.
+ * Đầy đủ thông tin tiếng Việt và khớp chính xác các trường dữ liệu của kiểu Movie.
  */
 export const SAMPLE_MOVIES: Movie[] = [
   {
     id: "1",
-    title: "Chrono Drift",
-    description: "Một nhà vật lý thiên văn khám phá ra lỗ hổng thời gian trong tâm một hố đen nhân tạo, buộc anh phải chọn giữa việc cứu gia đình hay bảo vệ dòng chảy lịch sử.",
-    posterUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500&auto=format&fit=crop&q=80",
-    backdropUrl: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1600&auto=format&fit=crop&q=80",
+    title: "Vòng Xoáy Thời Không",
+    originalTitle: "Chrono Drift",
+    description: "Một nhà vật lý thiên văn xuất sắc tình cờ kích hoạt lõi năng lượng cổ xưa, mở ra cánh cổng thời không kết nối quá khứ và tương lai, buộc anh phải đưa ra quyết định đánh đổi tính mạng để cứu gia đình.",
+    poster: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=600&auto=format&fit=crop&q=80",
+    backdrop: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1600&auto=format&fit=crop&q=80",
+    year: 2026,
+    genre: ["Viễn Tưởng", "Hành Động", "Gây Cấn"],
     rating: 8.9,
-    releaseYear: 2026,
     duration: "2h 32m",
-    genres: ["Sci-Fi", "Drama", "Mystery"],
+    quality: "4K UHD",
+    subtitle: "Vietsub",
+    views: 124500,
     isFeatured: true
   },
   {
     id: "2",
-    title: "Midnight Neon",
-    description: "Tại thành phố Neo-Tokyo phủ đầy mưa rào và ánh đèn neon, một thám tử điều tra các vụ mất tích bí ẩn liên quan đến dịch vụ lưu trữ ký ức số hóa.",
-    posterUrl: "https://images.unsplash.com/photo-1515621061946-eff1c2a352bd?w=500&auto=format&fit=crop&q=80",
-    backdropUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=1600&auto=format&fit=crop&q=80",
+    title: "Thành Phố Neon Ký Ức",
+    originalTitle: "Midnight Neon",
+    description: "Dưới những cơn mưa tầm tã rực ánh đèn neon tại Neo-Saigon năm 2088, một cựu thám tử điều tra đường dây buôn bán ký ức ảo phi pháp có liên quan đến sự mất tích của em gái anh.",
+    poster: "https://images.unsplash.com/photo-1515621061946-eff1c2a352bd?w=600&auto=format&fit=crop&q=80",
+    backdrop: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=1600&auto=format&fit=crop&q=80",
+    year: 2025,
+    genre: ["Hành Động", "Hình Sự", "Cyberpunk"],
     rating: 8.4,
-    releaseYear: 2025,
     duration: "1h 58m",
-    genres: ["Cyberpunk", "Action", "Thriller"]
+    quality: "FHD",
+    subtitle: "Thuyết Minh",
+    views: 98700
   },
   {
     id: "3",
-    title: "The Golden Era",
-    description: "Cuộc hành trình tìm lại ánh hào quang của một huyền thoại nhạc Jazz những năm 1950 trong thời kỳ giao thoa của âm nhạc hiện đại.",
-    posterUrl: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=500&auto=format&fit=crop&q=80",
-    backdropUrl: "https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=1600&auto=format&fit=crop&q=80",
+    title: "Âm Điệu Hoàng Kim",
+    originalTitle: "The Golden Era",
+    description: "Bộ phim tiểu sử âm nhạc kể về cuộc đời đầy thăng trầm của một thiên tài nhạc Jazz mù những năm 1950, nỗ lực tìm lại ánh hào quang trong thời đại nhạc điện tử bắt đầu trỗi dậy.",
+    poster: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&auto=format&fit=crop&q=80",
+    backdrop: "https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=1600&auto=format&fit=crop&q=80",
+    year: 2024,
+    genre: ["Tâm Lý", "Âm Nhạc", "Tiểu Sử"],
     rating: 9.1,
-    releaseYear: 2024,
     duration: "2h 10m",
-    genres: ["Music", "Drama", "Biography"]
+    quality: "4K UHD",
+    subtitle: "Vietsub",
+    views: 254000
   },
   {
     id: "4",
-    title: "Shadow Syndicate",
-    description: "Một cựu điệp viên phải đối mặt với tổ chức cũ của mình trong cuộc chiến giành quyền kiểm soát mạng lưới vệ tinh quân sự.",
-    posterUrl: "https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?w=500&auto=format&fit=crop&q=80",
-    backdropUrl: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1600&auto=format&fit=crop&q=80",
+    title: "Liên Minh Bóng Đêm",
+    originalTitle: "Shadow Syndicate",
+    description: "Một đặc vụ ngầm bị tổ chức phản bội buộc phải liên minh với các đối thủ cũ trong thế giới ngầm nhằm lật đổ dự án vệ tinh gián điệp toàn cầu.",
+    poster: "https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?w=600&auto=format&fit=crop&q=80",
+    backdrop: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1600&auto=format&fit=crop&q=80",
+    year: 2025,
+    genre: ["Hành Động", "Hình Sự", "Gây Cấn"],
     rating: 7.8,
-    releaseYear: 2025,
     duration: "2h 05m",
-    genres: ["Action", "Crime", "Suspense"]
+    quality: "FHD",
+    subtitle: "Vietsub",
+    views: 87300
+  },
+  {
+    id: "5",
+    title: "Ký Ức Đảo Hoang",
+    originalTitle: "Echoes of the Wild",
+    description: "Sau tai nạn máy bay thảm khốc, một nhà sinh vật học trẻ tuổi phải học cách sinh tồn trên một hòn đảo chưa có tên trên bản đồ, nơi cô phát hiện ra quần thể sinh vật cổ đại được cho là đã tuyệt chủng.",
+    poster: "https://images.unsplash.com/photo-1500627869374-13cd993b1115?w=600&auto=format&fit=crop&q=80",
+    backdrop: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1600&auto=format&fit=crop&q=80",
+    year: 2025,
+    genre: ["Phiêu Lưu", "Kỳ Ảo", "Sinh Tồn"],
+    rating: 8.2,
+    duration: "2h 18m",
+    quality: "4K UHD",
+    subtitle: "Vietsub",
+    views: 145000
+  },
+  {
+    id: "6",
+    title: "Vũ Trụ Vô Tận: Lỗ Đen",
+    originalTitle: "Beyond the Event Horizon",
+    description: "Phim tài liệu khoa học khám phá thế giới bí ẩn bên trong chân trời sự kiện của hố đen lớn nhất hệ vũ trụ đã biết, giải mã các lý thuyết vật lý lượng tử hiện đại nhất.",
+    poster: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=600&auto=format&fit=crop&q=80",
+    backdrop: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=1600&auto=format&fit=crop&q=80",
+    year: 2026,
+    genre: ["Tài Liệu", "Khoa Học", "Vũ Trụ"],
+    rating: 9.3,
+    duration: "1h 45m",
+    quality: "4K UHD",
+    subtitle: "Thuyết Minh",
+    views: 312000
+  },
+  {
+    id: "7",
+    title: "Trạm Cuối Hành Trình",
+    originalTitle: "Terminal Station",
+    description: "Hai người xa lạ tình cờ gặp nhau tại trạm ga tàu điện ngầm cuối cùng trước giờ giới nghiêm trong một đêm tuyết rơi dày đặc, khơi dậy những câu chuyện chưa kể trong quá khứ.",
+    poster: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=600&auto=format&fit=crop&q=80",
+    backdrop: "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1600&auto=format&fit=crop&q=80",
+    year: 2024,
+    genre: ["Tâm Lý", "Lãng Mạn"],
+    rating: 8.0,
+    duration: "1h 52m",
+    quality: "FHD",
+    subtitle: "Vietsub",
+    views: 65400
+  },
+  {
+    id: "8",
+    title: "Học Viện Pháp Thuật",
+    originalTitle: "Arcane Academy",
+    description: "Một cậu bé mồ côi không có ma lực vô tình tìm thấy cuốn sách cấm của học viện ma thuật lớn nhất vương quốc, bắt đầu hành trình trở thành pháp sư tối thượng thay đổi vận mệnh đất nước.",
+    poster: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=600&auto=format&fit=crop&q=80",
+    backdrop: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1600&auto=format&fit=crop&q=80",
+    year: 2026,
+    genre: ["Hoạt Hình", "Kỳ Ảo", "Anime"],
+    rating: 8.8,
+    duration: "2h 02m",
+    quality: "FHD",
+    subtitle: "Vietsub",
+    views: 189000
   }
 ];

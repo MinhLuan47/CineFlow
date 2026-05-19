@@ -1,14 +1,19 @@
-import { Layout } from "./components";
+import { Layout, Hero } from "./components";
 import { Monitor, Smartphone, Sparkles, Flame, ShieldAlert } from "lucide-react";
 
 /**
  * Trang App chính - Thiết lập khung bố cục landing page cơ bản (Base Layout Shell).
- * Phiên bản này chưa lắp ghép phần Hero điện ảnh hay danh sách phim chi tiết,
- * mà hiển thị các khối giới thiệu tính năng cơ bản của CineFlow để kiểm tra layout.
+ * Phiên bản này tải phần Hero điện ảnh và hiển thị các khối tính năng cơ bản của CineFlow.
  */
 function App() {
   return (
     <Layout>
+      {/* 
+        Thành phần Hero hiển thị phim nổi bật nhất.
+        Thực hiện theo lối thiết kế "Massive Typographic & Depth Overlay" với hiệu ứng 3D lơ lửng,
+        tích hợp Badges chất lượng cao và giao diện kính mờ Glassmorphism.
+      */}
+      <Hero />
       {/* 
         Khối Banner Thông Báo (Alert Banner)
         Thiết kế tối giản viền sắc nét chỉ 1px đỏ thẫm để thu hút sự chú ý nhẹ nhàng.
