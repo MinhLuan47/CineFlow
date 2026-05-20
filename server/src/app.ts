@@ -12,6 +12,7 @@ import { getCacheStats } from './utils/cache';
 import movieRouter from './routes/movie.routes';
 import genreRouter from './routes/genre.routes';
 import searchRouter from './routes/search.routes';
+import tvRouter from './routes/tv.routes';
 
 const app = express();
 
@@ -86,6 +87,9 @@ app.use('/api/genres', genreRouter);
 
 // Gắn bộ định tuyến cho công cụ tìm kiếm (Search Endpoints)
 app.use('/api/search', searchRouter);
+
+// Gắn bộ định tuyến cho các phim truyền hình (TV Series Endpoints)
+app.use('/api/tv', tvRouter);
 
 // Xử lý khi client truy cập các route không tồn tại (404 Not Found)
 app.use(notFoundMiddleware);
