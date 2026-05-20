@@ -13,6 +13,7 @@ import movieRouter from './routes/movie.routes';
 import genreRouter from './routes/genre.routes';
 import searchRouter from './routes/search.routes';
 import tvRouter from './routes/tv.routes';
+import discoverRouter from './routes/discover.routes';
 
 const app = express();
 
@@ -90,6 +91,9 @@ app.use('/api/search', searchRouter);
 
 // Gắn bộ định tuyến cho các phim truyền hình (TV Series Endpoints)
 app.use('/api/tv', tvRouter);
+
+// Gắn bộ định tuyến cho công cụ khám phá/lọc phim (Discover Endpoints)
+app.use('/api/discover', discoverRouter);
 
 // Xử lý khi client truy cập các route không tồn tại (404 Not Found)
 app.use(notFoundMiddleware);
