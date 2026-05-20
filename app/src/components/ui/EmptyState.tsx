@@ -1,5 +1,6 @@
 import React from "react";
 import { FolderOpen } from "lucide-react";
+import { Button } from "./Button";
 
 interface EmptyStateProps {
   message?: string;
@@ -22,12 +23,14 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       </div>
       <p className="text-muted text-sm max-w-sm leading-relaxed">{message}</p>
       {onReset && (
-        <button
+        <Button
           onClick={onReset}
-          className="mt-6 text-xs text-primary font-black uppercase tracking-wider underline hover:text-primary-dark transition-colors"
+          variant="ghost"
+          size="sm"
+          className="mt-6 text-xs text-primary underline hover:text-primary-dark hover:bg-transparent normal-case font-black tracking-wider"
         >
           {resetText}
-        </button>
+        </Button>
       )}
     </div>
   );

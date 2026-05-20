@@ -1,5 +1,6 @@
 import React from "react";
 import { ShieldAlert, RefreshCw } from "lucide-react";
+import { Button } from "./Button";
 
 interface ErrorStateProps {
   message?: string;
@@ -25,13 +26,15 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
           <span>Đang hiển thị dữ liệu ngoại tuyến (Fake Data) do mất kết nối máy chủ.</span>
         </div>
         {onRetry && (
-          <button
+          <Button
             onClick={onRetry}
-            className="flex items-center gap-1 font-bold text-red-300 hover:text-red-200 transition-colors underline decoration-dotted flex-shrink-0"
+            variant="ghost"
+            size="sm"
+            className="text-red-300 hover:text-red-200 underline decoration-dotted flex-shrink-0 h-auto p-0 hover:bg-transparent normal-case font-normal"
+            icon={<RefreshCw className="w-3 h-3" />}
           >
-            <RefreshCw className="w-3 h-3" />
             Thử lại
-          </button>
+          </Button>
         )}
       </div>
     );
@@ -47,13 +50,15 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
         <p className="text-xs text-muted leading-relaxed">{message}</p>
       </div>
       {onRetry && (
-        <button
+        <Button
           onClick={onRetry}
-          className="mt-2 text-xs font-black uppercase tracking-wider text-primary border border-primary/20 hover:border-primary/60 px-4 py-2 hover:bg-primary/5 transition-all rounded-sharp flex items-center gap-1.5"
+          variant="outline"
+          size="sm"
+          className="mt-2 text-primary border-primary/20 hover:border-primary/60 hover:bg-primary/5 text-xs"
+          icon={<RefreshCw className="w-3.5 h-3.5 animate-pulse" />}
         >
-          <RefreshCw className="w-3.5 h-3.5 animate-pulse" />
           Tải lại dữ liệu
-        </button>
+        </Button>
       )}
     </div>
   );
