@@ -1,19 +1,21 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { env } from './config/env';
+import { sendSuccess, ApiError } from './utils/response';
+import { asyncHandler } from './utils/async-handler';
+import { errorMiddleware } from './middlewares/error.middleware';
+import { notFoundMiddleware } from './middlewares/not-found.middleware';
 
 const app = express();
 
 // --- MIDDLEWARES CẤU HÌNH HỆ THỐNG ---
 
 // Helmet giúp bảo mật ứng dụng Express bằng cách thiết lập các tiêu đề HTTP (HTTP headers) bảo mật phù hợp.
-// Nó bảo vệ app khỏi một số lỗ hổng web phổ biến như XSS, Clickjacking, v.v.
 app.use(helmet());
 
 // Cấu hình CORS để xác định các domain (nguồn) nào được phép truy cập tài nguyên của API này.
-// Sử dụng CLIENT_URL đã được xác thực từ cấu hình hệ thống.
 app.use(cors({
   origin: env.CLIENT_URL,
   credentials: true // Cho phép gửi cookies/headers xác thực nếu có
@@ -27,33 +29,34 @@ app.use(express.json());
 
 // --- ROUTES ---
 
-// Route kiểm tra trạng thái hoạt động của hệ thống (Health Check)
+// Route kiểm tra trạng thái hoạt động của hệ thống (Health Check) sử dụng helper sendSuccess
 app.get('/api/health', (req: Request, res: Response) => {
-  res.status(200).json({
-    success: true,
-    message: "CineFlow API is running"
-  });
+  sendSuccess(res, null, 'CineFlow API is running');
 });
+
+// Thêm route thử nghiệm lỗi chỉ trong môi trường phát triển (Development)
+if (env.NODE_ENV === 'development') {
+  app.get(
+    '/api/test-error',
+    asyncHandler(async (req: Request, res: Response) => {
+      // Ném thử lỗi ApiError để kiểm tra cơ chế error middleware hoạt động
+      throw new ApiError(
+        400,
+        'Đây là thông báo lỗi thử nghiệm từ cổng test-error',
+        'TEST_ERROR_CODE',
+        {
+          timestamp: new Date().toISOString(),
+          reason: 'Kiểm tra cơ chế hoạt động của error middleware và asyncHandler'
+        }
+      );
+    })
+  );
+}
 
 // Xử lý khi client truy cập các route không tồn tại (404 Not Found)
-app.use((req: Request, res: Response, next: NextFunction) => {
-  res.status(404).json({
-    success: false,
-    message: `Không tìm thấy API route: ${req.originalUrl}`
-  });
-});
+app.use(notFoundMiddleware);
 
-// Middleware xử lý lỗi tập trung (Global Error Handler)
-// Khi bất kỳ hàm nào gọi next(error) hoặc quăng lỗi không được bắt, middleware này sẽ xử lý và trả về JSON thống nhất.
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.error('[SERVER ERROR]:', err);
-  
-  res.status(err.status || 500).json({
-    success: false,
-    message: env.NODE_ENV === 'production' 
-      ? 'Đã xảy ra lỗi hệ thống phía server' 
-      : err.message || 'Lỗi hệ thống'
-  });
-});
+// Middleware xử lý lỗi tập trung toàn cục (Global Error Handler)
+app.use(errorMiddleware);
 
 export default app;
