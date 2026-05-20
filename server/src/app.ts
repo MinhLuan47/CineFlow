@@ -10,6 +10,8 @@ import { notFoundMiddleware } from './middlewares/not-found.middleware';
 import { tmdbService } from './services/tmdb.service';
 import { getCacheStats } from './utils/cache';
 import movieRouter from './routes/movie.routes';
+import genreRouter from './routes/genre.routes';
+import searchRouter from './routes/search.routes';
 
 const app = express();
 
@@ -78,6 +80,12 @@ app.get(
 
 // Gắn bộ định tuyến cho các API phim (Movie Endpoints)
 app.use('/api/movies', movieRouter);
+
+// Gắn bộ định tuyến cho danh sách thể loại (Genre Endpoints)
+app.use('/api/genres', genreRouter);
+
+// Gắn bộ định tuyến cho công cụ tìm kiếm (Search Endpoints)
+app.use('/api/search', searchRouter);
 
 // Xử lý khi client truy cập các route không tồn tại (404 Not Found)
 app.use(notFoundMiddleware);

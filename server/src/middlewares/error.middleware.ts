@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { ZodError } from 'zod';
 import { ApiError } from '../utils/response';
 import { env } from '../config/env';
 
@@ -24,6 +25,15 @@ export const errorMiddleware = (
     message = err.message;
     errorCode = err.code;
     details = err.details;
+  } else if (err instanceof ZodError) {
+    // Xử lý lỗi kiểm duyệt dữ liệu đầu vào bằng Zod
+    statusCode = 400;
+    message = 'Dữ liệu yêu cầu không hợp lệ';
+    errorCode = 'VALIDATION_ERROR';
+    details = err.errors.map((e) => ({
+      field: e.path.join('.'),
+      message: e.message
+    }));
   } else if (err instanceof Error) {
     // Trường hợp lỗi thông thường từ Node.js (ví dụ: DB crash, SyntaxError, ReferenceError)
     message = err.message;
