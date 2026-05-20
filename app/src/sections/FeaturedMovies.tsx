@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, Clapperboard, Filter } from "lucide-react";
+import { ChevronRight, Clapperboard, Filter, RefreshCw } from "lucide-react";
 import { MovieCard, Button, SectionHeader, Container } from "../components";
-import { SAMPLE_MOVIES } from "../data/movies";
+import { useTrendingMovies } from "../hooks/useMovies";
+import type { Movie } from "../types/movie";
+import type { NormalizedMovie } from "../types/api";
 
 interface FilterCategory {
   id: string;
@@ -11,27 +13,65 @@ interface FilterCategory {
 }
 
 /**
+ * Hàm hỗ trợ chuyển đổi dữ liệu phim đã chuẩn hóa (NormalizedMovie)
+ * sang định dạng hiển thị cũ (Movie) để đảm bảo không phá vỡ UI của MovieCard.
+ */
+const mapNormalizedToMovie = (normalized: NormalizedMovie): Movie => {
+  return {
+    id: normalized.id,
+    title: normalized.title,
+    originalTitle: normalized.originalTitle,
+    poster: normalized.posterUrl || "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&auto=format&fit=crop&q=80",
+    backdrop: normalized.backdropUrl || "https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=1600&auto=format&fit=crop&q=80",
+    year: normalized.year || 2026,
+    genre: normalized.genres.length > 0 ? normalized.genres : ["Đang cập nhật"],
+    rating: normalized.voteAverage,
+    duration: normalized.runtime ? `${Math.floor(normalized.runtime / 60)}h ${normalized.runtime % 60}m` : "2h 00m",
+    quality: normalized.quality || "FHD",
+    subtitle: normalized.subtitleLanguages.length > 0 ? normalized.subtitleLanguages[0] : "Vietsub",
+    description: normalized.overview || "Chưa có tóm tắt nội dung.",
+    views: normalized.voteCount * 123 // Tạo lượt xem giả lập dựa trên lượt vote
+  };
+};
+
+/**
  * Phần "Phim Đề Cử Nổi Bật" (Featured Movies Section).
- * - Sử dụng Container, SectionHeader, Button và MovieCard dùng chung.
+ * - Kết nối trực tiếp đến Endpoint /api/movies/trending thông qua useTrendingMovies Hook.
+ * - Hỗ trợ dữ liệu giả lập (Offline Fallback) và hiển thị thông báo nếu gọi API gặp sự cố.
+ * - Hiển thị khung xương tải dữ liệu (Skeleton Card Shimmer) trong thời gian chờ đợi.
  */
 export const FeaturedMovies: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<string>("all");
+  
+  // Gọi API lấy danh sách phim xu hướng
+  const { data: movies, loading, error, refetch } = useTrendingMovies();
 
   const categories: FilterCategory[] = [
     { id: "all", label: "Tất cả" },
-    { id: "action", label: "Hành động", genreName: "Hành Động" },
-    { id: "scifi", label: "Viễn tưởng", genreName: "Viễn Tưởng" },
-    { id: "romance", label: "Lãng mạn", genreName: "Lãng Mạn" },
-    { id: "anime", label: "Anime", genreName: "Anime" },
-    { id: "thriller", label: "Gây cấn", genreName: "Gây Cấn" },
+    { id: "action", label: "Hành động", genreName: "Hành động" },
+    { id: "scifi", label: "Viễn tưởng", genreName: "Viễn tưởng" },
+    { id: "romance", label: "Lãng mạn", genreName: "Lãng mạn" },
+    { id: "anime", label: "Anime", genreName: "Hoạt hình" },
+    { id: "thriller", label: "Gây cấn", genreName: "Gây cấn" },
   ];
 
-  const filteredMovies = SAMPLE_MOVIES.filter((movie) => {
-    if (activeFilter === "all") return true;
-    const category = categories.find((c) => c.id === activeFilter);
-    if (!category || !category.genreName) return true;
-    return movie.genre.includes(category.genreName);
-  }).slice(0, 8);
+  // Lọc phim theo thể loại hoạt động
+  const displayMovies = useMemo(() => {
+    if (!movies) return [];
+    
+    const filtered = movies.filter((movie) => {
+      if (activeFilter === "all") return true;
+      const category = categories.find((c) => c.id === activeFilter);
+      if (!category || !category.genreName) return true;
+      
+      // So sánh không phân biệt chữ hoa/thường để tránh lệch định dạng dịch
+      return movie.genres.some(
+        (g) => g.toLowerCase().includes(category.genreName!.toLowerCase())
+      );
+    });
+
+    return filtered.slice(0, 8);
+  }, [movies, activeFilter]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const containerVariants = {
     hidden: {},
@@ -85,32 +125,64 @@ export const FeaturedMovies: React.FC = () => {
         </div>
       </div>
 
-      {/* Lưới Phim Responsive */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10"
-      >
-        <AnimatePresence mode="popLayout">
-          {filteredMovies.map((movie) => (
-            <motion.div
-              key={movie.id}
-              layout
-              variants={cardVariants}
-              initial="hidden"
-              animate="visible"
-              exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.3 } }}
-              className="w-full"
-            >
-              <MovieCard movie={movie} />
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </motion.div>
+      {/* Hiển thị lỗi nhỏ thân thiện nếu API bị lỗi */}
+      {error && (
+        <div className="mb-8 px-5 py-3 bg-red-950/30 border border-red-500/20 text-red-400 text-xs rounded-sharp flex items-center justify-between gap-4 animate-fade-in">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-ping" />
+            <span>Đang hoạt động ở chế độ ngoại tuyến (Fake Data) do không kết nối được máy chủ.</span>
+          </div>
+          <button 
+            onClick={() => refetch()} 
+            className="flex items-center gap-1 font-bold text-red-300 hover:text-red-200 transition-colors underline decoration-dotted"
+          >
+            <RefreshCw className="w-3 h-3" />
+            Thử lại
+          </button>
+        </div>
+      )}
 
-      {filteredMovies.length === 0 && (
+      {/* Lưới Phim Responsive */}
+      {loading ? (
+        // 1. GIAO DIỆN SKELETON KHI ĐANG TẢI DỮ LIỆU
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10">
+          {Array.from({ length: 8 }).map((_, idx) => (
+            <div key={`skeleton-${idx}`} className="w-full">
+              <MovieCard loading={true} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        // 2. GIAO DIỆN HIỂN THỊ DANH SÁCH PHIM ĐÃ TẢI XONG
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10"
+        >
+          <AnimatePresence mode="popLayout">
+            {displayMovies.map((movie) => {
+              const movieProp = mapNormalizedToMovie(movie);
+              return (
+                <motion.div
+                  key={movie.id}
+                  layout
+                  variants={cardVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.3 } }}
+                  className="w-full"
+                >
+                  <MovieCard movie={movieProp} />
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </motion.div>
+      )}
+
+      {!loading && displayMovies.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 text-center border border-dashed border-themeBorder rounded-sharp">
           <p className="text-muted text-sm">Chưa có phim đề cử thuộc thể loại này. Vui lòng chọn thể loại khác.</p>
         </div>
