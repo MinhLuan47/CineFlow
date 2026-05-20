@@ -4,7 +4,8 @@ import {
   getTrendingMovies,
   getPopularMovies,
   getNowPlayingMovies,
-  getTopRatedMovies
+  getTopRatedMovies,
+  getUpcomingMovies
 } from '../services/movieApi';
 import type { NormalizedMovie, ApiQueryParams } from '../types/api';
 import { fallbackMovies } from '../data/movies';
@@ -52,6 +53,7 @@ export function useMovies<T>(
   fallbackData?: T
 ) {
   const [data, setData] = useState<T | null>(fallbackData || null);
+  const [meta, setMeta] = useState<ApiResponse<T>['meta']>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -61,6 +63,7 @@ export function useMovies<T>(
     try {
       const response = await fetcher();
       setData(response.data);
+      setMeta(response.meta);
     } catch (err: any) {
       console.warn('Lỗi gọi API từ server, chuyển sang sử dụng dữ liệu dự phòng (fake data):', err);
       setError(err instanceof Error ? err : new Error(String(err)));
@@ -78,6 +81,7 @@ export function useMovies<T>(
 
   return {
     data,
+    meta,
     loading,
     error,
     refetch: fetchData
@@ -140,6 +144,21 @@ export function useTopRatedMovies(params?: ApiQueryParams) {
   }, [paramsString]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fallback = useMemo(() => getNormalizedSampleMovies().slice(0, 4), []);
+
+  return useMovies<NormalizedMovie[]>(fetcher, fallback);
+}
+
+/**
+ * Hook chuyên biệt lấy danh sách phim sắp chiếu rạp (Upcoming).
+ */
+export function useUpcomingMovies(params?: ApiQueryParams) {
+  const paramsString = JSON.stringify(params);
+
+  const fetcher = useCallback(() => {
+    return getUpcomingMovies(params);
+  }, [paramsString]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const fallback = useMemo(() => getNormalizedSampleMovies().slice(3, 9), []);
 
   return useMovies<NormalizedMovie[]>(fetcher, fallback);
 }

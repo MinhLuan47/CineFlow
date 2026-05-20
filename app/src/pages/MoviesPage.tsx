@@ -1,12 +1,49 @@
-import React from "react";
-import { useParams, Link } from "react-router-dom";
+import React, { useCallback } from "react";
+import { useParams, useSearchParams, Link } from "react-router-dom";
 import { Film, Flame, Star, Calendar, Layers } from "lucide-react";
+import {
+  getTrendingMovies,
+  getPopularMovies,
+  getNowPlayingMovies,
+  getTopRatedMovies,
+  getUpcomingMovies
+} from "../services/movieApi";
+import { useMovies } from "../hooks/useMovies";
+import { MovieCard, LoadingState, ErrorState, EmptyState } from "../components";
+import type { Movie } from "../types/movie";
+import type { NormalizedMovie } from "../types/api";
 
 /**
- * MoviesPage - Trang khám phá và phân loại danh sách phim điện ảnh.
+ * Hàm hỗ trợ chuyển đổi dữ liệu phim đã chuẩn hóa (NormalizedMovie)
+ * sang định dạng hiển thị cũ (Movie) để đảm bảo không phá vỡ UI của MovieCard.
+ */
+const mapNormalizedToMovie = (normalized: NormalizedMovie): Movie => {
+  return {
+    id: normalized.id,
+    title: normalized.title,
+    originalTitle: normalized.originalTitle,
+    poster: normalized.posterUrl || "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&auto=format&fit=crop&q=80",
+    backdrop: normalized.backdropUrl || "https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=1600&auto=format&fit=crop&q=80",
+    year: normalized.year || 2026,
+    genre: normalized.genres.length > 0 ? normalized.genres : ["Đang cập nhật"],
+    rating: normalized.voteAverage,
+    duration: normalized.runtime ? `${Math.floor(normalized.runtime / 60)}h ${normalized.runtime % 60}m` : "2h 00m",
+    quality: normalized.quality || "FHD",
+    subtitle: normalized.subtitleLanguages.length > 0 ? normalized.subtitleLanguages[0] : "Vietsub",
+    description: normalized.overview || "Chưa có tóm tắt nội dung.",
+    views: normalized.voteCount * 123 // Tạo lượt xem giả lập dựa trên lượt vote
+  };
+};
+
+/**
+ * MoviesPage - Trang khám phá và phân loại danh sách phim điện ảnh kết nối API.
  */
 export const MoviesPage: React.FC = () => {
   const { category } = useParams<{ category?: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Đọc chỉ số trang hiện tại từ URL query params (?page=X)
+  const page = parseInt(searchParams.get("page") || "1", 10);
   
   // Xác định thông tin danh mục hiện tại dựa trên param
   const activeCategory = category || "trending";
@@ -21,8 +58,41 @@ export const MoviesPage: React.FC = () => {
 
   const currentCat = categories.find(c => c.id === activeCategory) || categories[0];
 
+  /**
+   * Tạo fetcher động phản ứng với category và page thay đổi.
+   * Tất cả yêu cầu đều sử dụng ngôn ngữ tiếng Việt (vi-VN) và khu vực Việt Nam (VN).
+   */
+  const fetcher = useCallback(() => {
+    const queryParams = { page, language: "vi-VN", region: "VN" };
+    switch (activeCategory) {
+      case "popular":
+        return getPopularMovies(queryParams);
+      case "now-playing":
+        return getNowPlayingMovies(queryParams);
+      case "top-rated":
+        return getTopRatedMovies(queryParams);
+      case "upcoming":
+        return getUpcomingMovies(queryParams);
+      case "trending":
+      default:
+        return getTrendingMovies(queryParams);
+    }
+  }, [activeCategory, page]);
+
+  // Gọi hook useMovies lấy danh sách phim và thông tin phân trang (meta)
+  const { data: movies, meta, loading, error, refetch } = useMovies<NormalizedMovie[]>(fetcher);
+
+  // Xử lý chuyển đổi trang
+  const handlePageChange = (newPage: number) => {
+    setSearchParams({ page: newPage.toString() });
+    // Cuộn lên đầu trang mượt mà để người dùng xem kết quả mới
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const totalPages = meta?.totalPages || 1;
+
   return (
-    <div className="container-custom py-10 min-h-[60vh]">
+    <div className="container-custom py-10 min-h-[60vh] text-left">
       {/* Tiêu đề trang */}
       <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-themeBorder/40 pb-6 mb-8 gap-4">
         <div>
@@ -59,33 +129,67 @@ export const MoviesPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Grid danh sách phim giả lập / Placeholder */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-        {Array.from({ length: 12 }).map((_, idx) => (
-          <div 
-            key={idx} 
-            className="group relative bg-surface border border-themeBorder rounded-sharp overflow-hidden transition-all duration-300 hover:border-primary hover:-translate-y-1"
-          >
-            <div className="aspect-[2/3] w-full bg-themeBorder relative overflow-hidden flex items-center justify-center">
-              <Film className="w-10 h-10 text-muted opacity-30 group-hover:scale-110 transition-transform duration-300" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60" />
+      {/* Hiển thị lỗi kết nối nếu API gặp vấn đề */}
+      {error && (
+        <ErrorState onRetry={refetch} variant="banner" />
+      )}
+
+      {/* Lưới Phim chính hoặc Khung xương tải dữ liệu */}
+      {loading ? (
+        <LoadingState
+          variant="skeleton"
+          skeletonCount={12}
+          gridClass="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"
+        />
+      ) : (
+        <>
+          {movies && movies.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+              {movies.map((item) => {
+                const movieProp = mapNormalizedToMovie(item);
+                return (
+                  <Link 
+                    key={item.id} 
+                    to={`/movie/${item.id}`}
+                    className="block hover:-translate-y-1 transition-transform duration-300"
+                  >
+                    <MovieCard movie={movieProp} />
+                  </Link>
+                );
+              })}
             </div>
-            
-            <div className="p-3">
-              <h3 className="font-bold text-xs text-text truncate group-hover:text-primary transition-colors">
-                Siêu Phẩm Điện Ảnh #{idx + 1}
-              </h3>
-              <div className="flex items-center justify-between mt-2 text-[10px] text-muted">
-                <span>2026</span>
-                <div className="flex items-center gap-0.5 text-gold">
-                  <Star className="w-2.5 h-2.5 fill-current" />
-                  <span>8.5</span>
-                </div>
-              </div>
+          ) : (
+            <EmptyState
+              message={`Hiện chưa có bộ phim nào trong danh mục "${currentCat.label}".`}
+            />
+          )}
+
+          {/* Phân trang (Pagination) */}
+          {movies && movies.length > 0 && (
+            <div className="flex items-center justify-center gap-4 mt-12 pt-6 border-t border-themeBorder/20">
+              <button
+                onClick={() => handlePageChange(page - 1)}
+                disabled={page <= 1}
+                className="flex items-center gap-1 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sharp border border-themeBorder bg-surface text-muted hover:border-primary hover:text-text disabled:opacity-40 disabled:hover:border-themeBorder disabled:hover:text-muted transition-all duration-300"
+              >
+                Trang Trước
+              </button>
+
+              <span className="text-xs font-bold text-muted">
+                Trang <span className="text-primary">{page}</span> / {totalPages}
+              </span>
+
+              <button
+                onClick={() => handlePageChange(page + 1)}
+                disabled={page >= totalPages}
+                className="flex items-center gap-1 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sharp border border-themeBorder bg-surface text-muted hover:border-primary hover:text-text disabled:opacity-40 disabled:hover:border-themeBorder disabled:hover:text-muted transition-all duration-300"
+              >
+                Trang Sau
+              </button>
             </div>
-          </div>
-        ))}
-      </div>
+          )}
+        </>
+      )}
     </div>
   );
 };
