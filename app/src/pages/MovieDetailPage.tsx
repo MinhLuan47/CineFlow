@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Play, Star, Heart, Calendar, Clock, ArrowLeft, X, Check, Users, Film, Sparkles } from "lucide-react";
+import { Play, Star, Heart, Calendar, Clock, ArrowLeft, Check, Film, Sparkles } from "lucide-react";
 import {
   useMovieDetail,
   useMovieVideos,
@@ -8,7 +8,7 @@ import {
   useMovieRecommendations,
   useSimilarMovies
 } from "../hooks/useMovieDetail";
-import { MovieCard, LoadingState, ErrorState } from "../components";
+import { MovieCard, LoadingState, ErrorState, CastGrid, TrailerModal } from "../components";
 import { useWatchlist } from "../hooks/useWatchlist";
 import { mapNormalizedToMovie } from "../utils/movieMapper";
 
@@ -257,41 +257,7 @@ export const MovieDetailPage: React.FC = () => {
         </div>
 
         {/* C. Lưới diễn viên chính (Cast Preview) */}
-        <div className="mt-16 pt-12 border-t border-themeBorder/20">
-          <div className="flex items-center gap-2 mb-6">
-            <Users className="w-4 h-4 text-primary" />
-            <h3 className="text-xs font-black uppercase tracking-widest text-text">Dàn Diễn Viên Chính</h3>
-          </div>
-          
-          {castLoading ? (
-            <div className="flex gap-4 overflow-x-auto pb-4">
-              {[1, 2, 3, 4, 5, 6].map((n) => (
-                <div key={n} className="flex flex-col items-center gap-2 w-24 flex-shrink-0 animate-pulse">
-                  <div className="w-16 h-16 bg-surface rounded-full border border-themeBorder/50" />
-                  <div className="h-3 bg-surface w-12 rounded" />
-                </div>
-              ))}
-            </div>
-          ) : cast && cast.length > 0 ? (
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6">
-              {cast.slice(0, 8).map((actor) => (
-                <div key={actor.id} className="flex flex-col items-center text-center group">
-                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden bg-surface border border-themeBorder/40 shadow-lg mb-3 transform group-hover:scale-105 transition-transform duration-300">
-                    <img
-                      src={actor.profileUrl || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80"}
-                      alt={actor.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <span className="text-xs font-bold text-text truncate w-full">{actor.name}</span>
-                  <span className="text-[10px] text-muted truncate w-full mt-0.5">{actor.character}</span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-xs text-muted">Thông tin diễn viên đang được cập nhật.</p>
-          )}
-        </div>
+        <CastGrid cast={cast} loading={castLoading} />
 
         {/* D. Danh sách phim gợi ý đề xuất (Recommendations) */}
         <div className="mt-20 pt-12 border-t border-themeBorder/20">
@@ -342,26 +308,12 @@ export const MovieDetailPage: React.FC = () => {
       </div>
 
       {/* 3. Modal xem Trailer Youtube */}
-      {isTrailerOpen && trailerVideo && (
-        <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-[999] flex items-center justify-center p-4 animate-fade-in">
-          <div className="relative w-full max-w-4xl aspect-video bg-black border border-white/10 rounded-sharp overflow-hidden shadow-2xl">
-            {/* Nút đóng modal */}
-            <button
-              onClick={() => setIsTrailerOpen(false)}
-              className="absolute top-4 right-4 z-10 p-2 bg-black/60 hover:bg-primary hover:text-text rounded-sharp text-muted transition-colors duration-300"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <iframe
-              src={`https://www.youtube.com/embed/${trailerVideo.key}?autoplay=1`}
-              title={`${movie.title} Trailer`}
-              className="w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-        </div>
-      )}
+      <TrailerModal
+        isOpen={isTrailerOpen}
+        onClose={() => setIsTrailerOpen(false)}
+        videoKey={trailerVideo?.key}
+        title={movie.title}
+      />
     </div>
   );
 };

@@ -17,4 +17,9 @@ export { ErrorState } from "./ui/ErrorState";
 export { EmptyState } from "./ui/EmptyState";
 export { MediaCard } from "./MediaCard";
 export { Pagination } from "./Pagination";
+export { LibraryFilterBar } from "./LibraryFilterBar";
+export { CastGrid } from "./CastGrid";
+export { TrailerModal } from "./TrailerModal";
+export { SearchFilterTabs } from "./SearchFilterTabs";
+export { SearchResultsGrid } from "./SearchResultsGrid";
 
