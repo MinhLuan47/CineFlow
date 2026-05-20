@@ -8,7 +8,7 @@ import {
   useMovieRecommendations,
   useSimilarMovies
 } from "../hooks/useMovieDetail";
-import { MovieCard, LoadingState, ErrorState, CastGrid, TrailerModal } from "../components";
+import { MovieCard, LoadingState, ErrorState, CastGrid, TrailerModal, Button, Badge } from "../components";
 import { useWatchlist } from "../hooks/useWatchlist";
 import { mapNormalizedToMovie } from "../utils/movieMapper";
 
@@ -194,12 +194,14 @@ export const MovieDetailPage: React.FC = () => {
             {/* Thể loại phim */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mt-4">
               {movie.genres.map((genreName, idx) => (
-                <span
+                <Badge
                   key={idx}
-                  className="text-xs font-bold bg-surface/50 border border-themeBorder/60 px-3 py-1 rounded-sharp text-text hover:border-primary/45 transition-colors"
+                  variant="outline"
+                  size="sm"
+                  className="text-xs font-bold bg-surface/50 border border-themeBorder/60 px-3 py-1 text-text hover:border-primary/45 transition-colors cursor-default"
                 >
                   {genreName}
-                </span>
+                </Badge>
               ))}
             </div>
 
@@ -223,35 +225,30 @@ export const MovieDetailPage: React.FC = () => {
               </Link>
               
               {/* Nút Xem Trailer */}
-              <button
+              <Button
                 onClick={handleOpenTrailer}
-                className="flex items-center gap-2 px-5 py-3.5 bg-surface hover:bg-themeBorder border border-themeBorder text-text text-xs font-black uppercase tracking-wider rounded-sharp transition-all duration-300"
+                variant="secondary"
+                size="md"
+                className="px-5 py-3.5 bg-surface hover:bg-themeBorder border border-themeBorder text-xs font-black uppercase tracking-wider"
+                icon={<Film className="w-4 h-4 text-gold" />}
               >
-                <Film className="w-4 h-4 text-gold" />
-                <span>Xem Trailer</span>
-              </button>
+                Xem Trailer
+              </Button>
 
               {/* Nút thêm vào danh sách phát (Watchlist) */}
-              <button
+              <Button
                 onClick={handleToggleWatchlist}
-                className={`flex items-center gap-2 px-5 py-3.5 border text-xs font-black uppercase tracking-wider rounded-sharp transition-all duration-300 ${
+                variant={isInWatchlist ? "outline" : "secondary"}
+                size="md"
+                className={`px-5 py-3.5 border text-xs font-black uppercase tracking-wider ${
                   isInWatchlist
-                    ? "bg-emerald-950/20 border-emerald-500/30 text-emerald-400 hover:bg-emerald-950/40"
+                    ? "bg-emerald-950/20 border-emerald-500/30 text-emerald-400 hover:bg-emerald-950/40 hover:text-emerald-300"
                     : "bg-surface hover:bg-themeBorder border-themeBorder text-text"
                 }`}
+                icon={isInWatchlist ? <Check className="w-4 h-4 text-emerald-400" /> : <Heart className="w-4 h-4 text-primary" />}
               >
-                {isInWatchlist ? (
-                  <>
-                    <Check className="w-4 h-4 text-emerald-400" />
-                    <span>Đã thích</span>
-                  </>
-                ) : (
-                  <>
-                    <Heart className="w-4 h-4 text-primary" />
-                    <span>Yêu Thích</span>
-                  </>
-                )}
-              </button>
+                {isInWatchlist ? "Đã thích" : "Yêu Thích"}
+              </Button>
             </div>
           </div>
         </div>

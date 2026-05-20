@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Send, Sparkles, Mail, Phone, MapPin } from "lucide-react";
+import { Button } from "../../components";
 
 export const ContactPage: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -73,13 +74,15 @@ export const ContactPage: React.FC = () => {
                 />
               </div>
 
-              <button
+              <Button
                 type="submit"
-                className="mt-2 w-full py-3 bg-gold hover:bg-gold-hover text-background text-xs font-black uppercase tracking-wider rounded-sharp flex items-center justify-center gap-1.5 transition-all"
+                variant="primary"
+                size="md"
+                className="mt-2 w-full bg-gold hover:bg-gold-hover text-background hover:text-background text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-none border-none"
+                icon={<Send className="w-4 h-4" />}
               >
-                <Send className="w-4 h-4" />
-                <span>Gửi thông tin</span>
-              </button>
+                Gửi thông tin
+              </Button>
             </form>
           )}
         </div>

@@ -17,7 +17,8 @@ import {
   ErrorState, 
   WatchEpisodeSelector, 
   RelatedMediaSidebar, 
-  WatchMediaInfo 
+  WatchMediaInfo,
+  Button
 } from "../components";
 import { useWatchHistory } from "../hooks/useWatchHistory";
 
@@ -217,20 +218,24 @@ export const WatchPage: React.FC = () => {
 
           {/* C. Các hành động hỗ trợ phụ */}
           <div className="flex gap-3">
-            <button 
+            <Button 
               onClick={() => alert("Đã sao chép liên kết xem phim vào Clipboard!")}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-surface hover:bg-themeBorder border border-themeBorder rounded-sharp text-xs font-bold text-text transition-all"
+              variant="secondary"
+              size="sm"
+              className="flex-1 bg-surface hover:bg-themeBorder border border-themeBorder text-xs font-bold text-text"
+              icon={<Share2 className="w-4 h-4 text-gold" />}
             >
-              <Share2 className="w-4 h-4 text-gold" />
-              <span>Chia sẻ</span>
-            </button>
-            <button 
+              Chia sẻ
+            </Button>
+            <Button 
               onClick={() => alert("Cảm ơn bạn đã phản hồi! Lỗi đã được gửi tới quản trị viên.")}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-surface hover:bg-themeBorder border border-themeBorder rounded-sharp text-xs font-bold text-text transition-all"
+              variant="secondary"
+              size="sm"
+              className="flex-1 bg-surface hover:bg-themeBorder border border-themeBorder text-xs font-bold text-text"
+              icon={<Info className="w-4 h-4 text-gold" />}
             >
-              <Info className="w-4 h-4 text-gold" />
-              <span>Báo lỗi</span>
-            </button>
+              Báo lỗi
+            </Button>
           </div>
         </div>
 

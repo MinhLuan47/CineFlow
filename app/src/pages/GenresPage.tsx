@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Film, Tv } from "lucide-react";
 import { useGenres } from "../hooks/useGenres";
 import { getGenreStyle } from "../config/genreStyles";
+import { Button, Badge } from "../components";
 
 export const GenresPage: React.FC = () => {
   const { movieGenres, tvGenres, loading, error } = useGenres();
@@ -48,12 +49,14 @@ export const GenresPage: React.FC = () => {
         </div>
         <h2 className="font-display font-bold text-xl text-text mb-2">Đã xảy ra lỗi</h2>
         <p className="text-muted text-sm max-w-md">{error}</p>
-        <button 
+        <Button 
           onClick={() => window.location.reload()}
-          className="mt-6 px-5 py-2 bg-primary hover:bg-primary-dark text-text text-sm font-bold rounded-sharp transition-colors"
+          variant="primary"
+          size="sm"
+          className="mt-6 font-bold"
         >
           Tải lại trang
-        </button>
+        </Button>
       </div>
     );
   }
@@ -87,9 +90,13 @@ export const GenresPage: React.FC = () => {
                   className={`group relative flex flex-col items-start justify-between p-6 bg-surface/40 backdrop-blur-md border border-themeBorder/80 rounded-sharp transition-all duration-300 ${style.glowClass} overflow-hidden min-h-[140px]`}
                 >
                   {/* Badge định dạng ở góc phải trên */}
-                  <span className="absolute top-4 right-4 text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-sharp bg-primary/20 border border-primary/30 text-primary">
+                  <Badge
+                    variant="primary"
+                    size="sm"
+                    className="absolute top-4 right-4 text-[9px]"
+                  >
                     Phim lẻ
-                  </span>
+                  </Badge>
 
                   <div className="flex flex-col gap-2 relative z-10 w-full pr-12">
                     <Icon className={`w-8 h-8 ${style.color} group-hover:scale-110 transition-transform duration-300`} />
@@ -126,9 +133,13 @@ export const GenresPage: React.FC = () => {
                   className={`group relative flex flex-col items-start justify-between p-6 bg-surface/40 backdrop-blur-md border border-themeBorder/80 rounded-sharp transition-all duration-300 ${style.glowClass} overflow-hidden min-h-[140px]`}
                 >
                   {/* Badge định dạng ở góc phải trên */}
-                  <span className="absolute top-4 right-4 text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-sharp bg-gold/20 border border-gold/30 text-gold">
+                  <Badge
+                    variant="gold"
+                    size="sm"
+                    className="absolute top-4 right-4 text-[9px]"
+                  >
                     Phim bộ
-                  </span>
+                  </Badge>
 
                   <div className="flex flex-col gap-2 relative z-10 w-full pr-12">
                     <Icon className={`w-8 h-8 ${style.color} group-hover:scale-110 transition-transform duration-300`} />

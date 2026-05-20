@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Search, ArrowLeft } from "lucide-react";
 import { searchMulti } from "../services/searchApi";
-import { LoadingState, ErrorState, EmptyState, Pagination, SearchFilterTabs, SearchResultsGrid } from "../components";
+import { LoadingState, ErrorState, EmptyState, Pagination, SearchFilterTabs, SearchResultsGrid, Button } from "../components";
 import type { SearchResult } from "../types/api";
 
 /**
@@ -135,12 +135,14 @@ export const SearchPage: React.FC = () => {
             className="w-full h-14 pl-14 pr-24 bg-surface border border-themeBorder focus:border-primary focus:ring-1 focus:ring-primary/20 text-sm text-text rounded-sharp outline-none transition-all shadow-xl font-medium"
           />
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5.5 h-5.5 text-muted group-focus-within:text-primary transition-colors" />
-          <button
+          <Button
             type="submit"
-            className="absolute right-2 top-1/2 -translate-y-1/2 h-10 px-4 bg-primary hover:bg-primary/90 text-text font-black text-xs uppercase tracking-wider rounded-sharp transition-colors duration-300"
+            variant="primary"
+            size="sm"
+            className="absolute right-2 top-1/2 -translate-y-1/2 h-10 px-4 text-xs font-black uppercase tracking-wider"
           >
             Tìm kiếm
-          </button>
+          </Button>
         </form>
 
         {queryParam.trim().length >= 2 && (
