@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, Compass, Star, Heart, Volume2, ShieldCheck, Flame } from "lucide-react";
 import type { Movie } from "../types/movie";
-import { SAMPLE_MOVIES } from "../data/movies";
+import { fallbackMovies } from "../data/movies";
 import { Button, Badge } from "../components";
 
 /**
@@ -10,7 +10,7 @@ import { Button, Badge } from "../components";
  * - Sử dụng các thành phần UI chung: Button, Badge.
  */
 export const Hero: React.FC = () => {
-  const featuredMovie: Movie = SAMPLE_MOVIES[0];
+  const featuredMovie: Movie = fallbackMovies[0];
   
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
@@ -191,11 +191,11 @@ export const Hero: React.FC = () => {
           </div>
 
           <div className="absolute -left-12 -bottom-6 w-24 h-36 border border-themeBorder/60 bg-card rounded-sharp shadow-xl opacity-30 group-hover:opacity-50 transition-opacity duration-500 overflow-hidden pointer-events-none hidden md:block z-10 -rotate-6">
-            <img src={SAMPLE_MOVIES[1].poster} alt="Floating movie 1" className="w-full h-full object-cover" />
+            <img src={fallbackMovies[1].poster} alt="Floating movie 1" className="w-full h-full object-cover" />
           </div>
 
           <div className="absolute -right-12 -top-8 w-28 h-40 border border-themeBorder/60 bg-card rounded-sharp shadow-xl opacity-30 group-hover:opacity-50 transition-opacity duration-500 overflow-hidden pointer-events-none hidden md:block z-10 rotate-12">
-            <img src={SAMPLE_MOVIES[2].poster} alt="Floating movie 2" className="w-full h-full object-cover" />
+            <img src={fallbackMovies[2].poster} alt="Floating movie 2" className="w-full h-full object-cover" />
           </div>
 
         </motion.div>

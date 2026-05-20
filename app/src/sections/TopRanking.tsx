@@ -2,14 +2,14 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Star, Play, Eye, TrendingUp } from "lucide-react";
 import { Container, SectionHeader, Button } from "../components";
-import { SAMPLE_MOVIES } from "../data/movies";
+import { fallbackMovies } from "../data/movies";
 
 /**
  * Phần "Bảng Xếp Hạng Tuần Này" (Top Ranking Section).
  * - Sử dụng Container, SectionHeader và Button dạng icon dùng chung.
  */
 export const TopRanking: React.FC = () => {
-  const rankedMovies = [...SAMPLE_MOVIES]
+  const rankedMovies = [...fallbackMovies]
     .sort((a, b) => (b.views || 0) - (a.views || 0))
     .slice(0, 10);
 
@@ -39,7 +39,7 @@ export const TopRanking: React.FC = () => {
     show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 100 } },
   };
 
-  const renderRankItem = (movie: typeof SAMPLE_MOVIES[0], index: number) => {
+  const renderRankItem = (movie: typeof fallbackMovies[0], index: number) => {
     const rank = index + 1;
     const isTop3 = rank <= 3;
 

@@ -1,5 +1,5 @@
 import { apiGet } from './apiClient';
-import { NormalizedMovie, NormalizedVideo, NormalizedCast, ApiQueryParams } from '../types/api';
+import type { NormalizedMovie, NormalizedVideo, NormalizedCast, ApiQueryParams } from '../types/api';
 
 // Tham số mặc định cho các yêu cầu API ở phía Frontend CineFlow
 const DEFAULT_PARAMS = {

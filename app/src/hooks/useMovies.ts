@@ -1,20 +1,20 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { ApiResponse } from '../services/apiClient';
+import type { ApiResponse } from '../services/apiClient';
 import {
   getTrendingMovies,
   getPopularMovies,
   getNowPlayingMovies,
   getTopRatedMovies
 } from '../services/movieApi';
-import { NormalizedMovie, ApiQueryParams } from '../types/api';
-import { SAMPLE_MOVIES } from '../data/movies';
+import type { NormalizedMovie, ApiQueryParams } from '../types/api';
+import { fallbackMovies } from '../data/movies';
 
 /**
- * Hàm phụ trợ chuẩn hóa danh sách SAMPLE_MOVIES (dữ liệu giả lập)
+ * Hàm phụ trợ chuẩn hóa danh sách fallbackMovies (dữ liệu giả lập)
  * thành định dạng NormalizedMovie khớp với phản hồi từ Backend.
  */
 export const getNormalizedSampleMovies = (): NormalizedMovie[] => {
-  return SAMPLE_MOVIES.map((movie) => ({
+  return fallbackMovies.map((movie) => ({
     id: movie.id,
     tmdbId: parseInt(movie.id, 10) * 1000,
     title: movie.title,

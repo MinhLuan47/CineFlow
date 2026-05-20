@@ -1,11 +1,6 @@
 import type { Movie } from "../types/movie";
 
-/**
- * Danh sách dữ liệu phim giả lập (Fake Movie Data) chất lượng cao cho CineFlow.
- * Sử dụng hình ảnh bản quyền tự do từ Unsplash mô phỏng hình ảnh điện ảnh nghệ thuật.
- * Đầy đủ thông tin tiếng Việt và khớp chính xác các trường dữ liệu của kiểu Movie.
- */
-export const SAMPLE_MOVIES: Movie[] = [
+export const fallbackMovies: Movie[] = [
   {
     id: "1",
     title: "Vòng Xoáy Thời Không",
@@ -158,3 +153,5 @@ export const SAMPLE_MOVIES: Movie[] = [
     views: 73000
   }
 ];
+
+export const fallbackFeaturedMovies: Movie[] = fallbackMovies.filter(m => m.isFeatured);

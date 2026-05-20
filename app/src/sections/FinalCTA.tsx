@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Play, Sparkles, Film } from "lucide-react";
 import { Container, Button } from "../components";
-import { SAMPLE_MOVIES } from "../data/movies";
+import { fallbackMovies } from "../data/movies";
 
 /**
  * Phần Kêu Gọi Hành Động Cuối Trang (Final CTA Section).
@@ -10,9 +10,9 @@ import { SAMPLE_MOVIES } from "../data/movies";
  */
 export const FinalCTA: React.FC = () => {
   const displayPosters = [
-    SAMPLE_MOVIES[0]?.poster,
-    SAMPLE_MOVIES[5]?.poster,
-    SAMPLE_MOVIES[2]?.poster
+    fallbackMovies[0]?.poster,
+    fallbackMovies[5]?.poster,
+    fallbackMovies[2]?.poster
   ];
 
   return (

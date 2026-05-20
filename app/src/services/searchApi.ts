@@ -1,5 +1,5 @@
 import { apiGet } from './apiClient';
-import { SearchResult } from '../types/api';
+import type { SearchResult } from '../types/api';
 
 /**
  * Tìm kiếm đa mục tiêu (Multi Search) bao gồm Phim điện ảnh (Movie), Phim truyền hình (TV) và Diễn viên (Person).

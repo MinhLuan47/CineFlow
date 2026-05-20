@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { searchMulti } from '../services/searchApi';
-import { SearchResult } from '../types/api';
+import type { SearchResult } from '../types/api';
 
 /**
  * Hook tùy chỉnh để thực hiện tìm kiếm phim (điện ảnh & truyền hình)

@@ -4,7 +4,7 @@ import {
   Flame, Heart, Smile, Ghost, Sparkles, Rocket, Compass, Film, Globe, History, Compass as GridIcon
 } from "lucide-react";
 import { Container, SectionHeader } from "../components";
-import { SAMPLE_MOVIES } from "../data/movies";
+import { fallbackMovies } from "../data/movies";
 
 interface GenreItem {
   id: string;
@@ -33,7 +33,7 @@ export const BrowseGenres: React.FC = () => {
   ];
 
   const getMovieCount = (item: GenreItem) => {
-    const dynamicCount = SAMPLE_MOVIES.filter((movie) => 
+    const dynamicCount = fallbackMovies.filter((movie) => 
       movie.genre.some((g) => g.toLowerCase().includes(item.searchKey))
     ).length;
     return item.baseCount + dynamicCount;

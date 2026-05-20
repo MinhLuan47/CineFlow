@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getMovieDetail } from '../services/movieApi';
-import { NormalizedMovie } from '../types/api';
+import type { NormalizedMovie } from '../types/api';
 import { getNormalizedSampleMovies } from './useMovies';
 
 /**
