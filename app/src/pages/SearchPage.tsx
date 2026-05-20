@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Search, Film, Tv, Users, ArrowLeft } from "lucide-react";
 import { searchMulti } from "../services/searchApi";
-import { MovieCard, LoadingState, ErrorState, EmptyState } from "../components";
+import { MovieCard, LoadingState, ErrorState, EmptyState, Pagination } from "../components";
 import type { Movie } from "../types/movie";
 import type { NormalizedMovie, NormalizedTvSeries, SearchResult } from "../types/api";
 
@@ -301,27 +301,11 @@ export const SearchPage: React.FC = () => {
 
             {/* Điều khiển phân trang (chỉ hiển thị khi không lọc loại hình hoặc tổng trang > 1) */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-4 mt-16 pt-6 border-t border-themeBorder/20">
-                <button
-                  onClick={() => handlePageChange(pageParam - 1)}
-                  disabled={pageParam <= 1}
-                  className="flex items-center gap-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sharp border border-themeBorder bg-surface text-muted hover:border-primary hover:text-text disabled:opacity-40 disabled:hover:border-themeBorder disabled:hover:text-muted transition-all duration-300"
-                >
-                  Trang Trước
-                </button>
-
-                <span className="text-xs font-bold text-muted">
-                  Trang <span className="text-primary">{pageParam}</span> / {totalPages}
-                </span>
-
-                <button
-                  onClick={() => handlePageChange(pageParam + 1)}
-                  disabled={pageParam >= totalPages}
-                  className="flex items-center gap-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sharp border border-themeBorder bg-surface text-muted hover:border-primary hover:text-text disabled:opacity-40 disabled:hover:border-themeBorder disabled:hover:text-muted transition-all duration-300"
-                >
-                  Trang Sau
-                </button>
-              </div>
+              <Pagination
+                currentPage={pageParam}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
             )}
           </>
         )}

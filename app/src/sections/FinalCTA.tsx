@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Play, Sparkles, Film } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Container, Button } from "../components";
 import { fallbackMovies } from "../data/movies";
 
@@ -39,15 +40,17 @@ export const FinalCTA: React.FC = () => {
             </p>
 
             <div className="mt-4 w-full sm:w-auto">
-              <Button
-                variant="primary"
-                size="lg"
-                className="w-full sm:w-auto relative group overflow-hidden"
-                icon={<Play className="w-4 h-4 fill-current ml-0.5" />}
-              >
-                <div className="absolute inset-0 w-1/2 h-full bg-white/10 -skew-x-12 -translate-x-full group-hover:animate-shine pointer-events-none" />
-                <span>Bắt Đầu Xem Ngay</span>
-              </Button>
+              <Link to="/watch/movie/823464" className="block w-full sm:w-auto">
+                <Button
+                  variant="primary"
+                  size="lg"
+                  className="w-full relative group overflow-hidden"
+                  icon={<Play className="w-4 h-4 fill-current ml-0.5" />}
+                >
+                  <div className="absolute inset-0 w-1/2 h-full bg-white/10 -skew-x-12 -translate-x-full group-hover:animate-shine pointer-events-none" />
+                  <span>Bắt Đầu Xem Ngay</span>
+                </Button>
+              </Link>
             </div>
 
             <div className="flex items-center gap-1.5 text-xs text-muted/80 mt-1">

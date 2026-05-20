@@ -16,3 +16,5 @@ export { LoadingState } from "./ui/LoadingState";
 export { ErrorState } from "./ui/ErrorState";
 export { EmptyState } from "./ui/EmptyState";
 export { MediaCard } from "./MediaCard";
+export { Pagination } from "./Pagination";
+

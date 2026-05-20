@@ -134,7 +134,7 @@ export const Header: React.FC = () => {
 
                     {/* Panel kết quả tìm kiếm dạng Dropdown */}
                     {isDropdownOpen && query.trim().length >= 2 && (
-                        <div className="absolute top-full right-0 left-0 mt-2 bg-background/95 backdrop-blur-xl border border-themeBorder rounded-sharp shadow-2xl p-2 max-h-96 overflow-y-auto z-50 scrollbar-thin">
+                        <div className="absolute top-full right-0 left-0 mt-2 bg-card border border-themeBorder rounded-sharp shadow-2xl p-2 max-h-96 overflow-y-auto z-50 scrollbar-thin">
                             {loading && results.length === 0 && (
                                 <div className="py-8 flex flex-col items-center justify-center text-muted gap-2">
                                     <Loader2 className="w-5 h-5 animate-spin text-primary" />
@@ -152,8 +152,10 @@ export const Header: React.FC = () => {
                                 const isMovie = item.mediaType === 'movie';
                                 const isTv = item.mediaType === 'tv';
                                 const isPerson = item.mediaType === 'person';
-                                const title = isMovie ? item.title : item.name;
-                                const originalTitle = isMovie ? item.originalTitle : item.originalName;
+                                const title = isMovie ? item.title : (item as any).title || item.name || '';
+                                const originalTitle = isMovie
+                                    ? item.originalTitle
+                                    : (item as any).originalTitle || item.originalName || '';
                                 const poster = isPerson
                                     ? item.profileUrl ||
                                       'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&auto=format&fit=crop&q=80'
@@ -224,13 +226,11 @@ export const Header: React.FC = () => {
 
                 {/* Cụm nút hành động bên phải (Desktop) */}
                 <div className="hidden md:flex items-center gap-3 flex-shrink-0">
-                    <Button variant="secondary" size="sm" icon={<LogIn className="w-4 h-4" />}>
-                        Đăng nhập
-                    </Button>
-
-                    <Button variant="primary" size="sm" icon={<Play className="w-4 h-4 fill-current" />}>
-                        Xem ngay
-                    </Button>
+                    <Link to="/watch/movie/823464">
+                        <Button variant="primary" size="sm" icon={<Play className="w-4 h-4 fill-current" />}>
+                            Xem ngay
+                        </Button>
+                    </Link>
                 </div>
 
                 {/* Nút Hamburger cho thiết bị di động */}
@@ -275,7 +275,7 @@ export const Header: React.FC = () => {
 
                     {/* Danh sách kết quả tìm kiếm trên Mobile */}
                     {query.trim().length >= 2 && (
-                        <div className="bg-surface/50 border border-themeBorder/40 rounded-sharp p-2 max-h-60 overflow-y-auto">
+                        <div className="bg-card border border-themeBorder/40 rounded-sharp p-2 max-h-60 overflow-y-auto">
                             {loading && results.length === 0 && (
                                 <div className="py-6 flex items-center justify-center text-muted gap-2 text-xs">
                                     <Loader2 className="w-4 h-4 animate-spin text-primary" />
@@ -291,8 +291,10 @@ export const Header: React.FC = () => {
                                 const isMovie = item.mediaType === 'movie';
                                 const isTv = item.mediaType === 'tv';
                                 const isPerson = item.mediaType === 'person';
-                                const title = isMovie ? item.title : item.name;
-                                const originalTitle = isMovie ? item.originalTitle : item.originalName;
+                                const title = isMovie ? item.title : (item as any).title || item.name || '';
+                                const originalTitle = isMovie
+                                    ? item.originalTitle
+                                    : (item as any).originalTitle || item.originalName || '';
                                 const poster = isPerson
                                     ? item.profileUrl ||
                                       'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&auto=format&fit=crop&q=80'
@@ -359,15 +361,16 @@ export const Header: React.FC = () => {
                             Đăng nhập thành viên
                         </Button>
 
-                        <Button
-                            variant="primary"
-                            size="md"
-                            className="w-full"
-                            icon={<Play className="w-5 h-5 fill-current" />}
-                            onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                            Xem ngay
-                        </Button>
+                        <Link to="/watch/movie/823464" onClick={() => setIsMobileMenuOpen(false)} className="w-full">
+                            <Button
+                                variant="primary"
+                                size="md"
+                                className="w-full"
+                                icon={<Play className="w-5 h-5 fill-current" />}
+                            >
+                                Xem ngay
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             )}

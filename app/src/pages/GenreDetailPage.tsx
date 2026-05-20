@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useSearchParams, Link } from "react-router-dom";
-import { ArrowLeft, ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
+import { ArrowLeft, SlidersHorizontal } from "lucide-react";
 import { discoverMovies, discoverTv } from "../services/genreApi";
 import { useGenres } from "../hooks/useGenres";
-import { MediaCard, LoadingState, ErrorState, EmptyState } from "../components";
+import { MediaCard, LoadingState, ErrorState, EmptyState, Pagination } from "../components";
 import type { NormalizedMovie, NormalizedTvSeries } from "../types/api";
 
 // Các tùy chọn sắp xếp hiển thị ở giao diện
@@ -186,29 +186,11 @@ export const GenreDetailPage: React.FC = () => {
 
           {/* Khối phân trang (Pagination Block) */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-4 mt-12 pt-6 border-t border-themeBorder/20">
-              <button
-                onClick={() => handlePageChange(page - 1)}
-                disabled={page <= 1}
-                className="flex items-center gap-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sharp border border-themeBorder bg-surface text-muted hover:border-primary hover:text-text disabled:opacity-40 disabled:hover:border-themeBorder disabled:hover:text-muted transition-all duration-300"
-              >
-                <ChevronLeft className="w-4 h-4" />
-                Trang Trước
-              </button>
-
-              <span className="text-xs font-bold text-muted">
-                Trang <span className="text-primary">{page}</span> / {totalPages}
-              </span>
-
-              <button
-                onClick={() => handlePageChange(page + 1)}
-                disabled={page >= totalPages}
-                className="flex items-center gap-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sharp border border-themeBorder bg-surface text-muted hover:border-primary hover:text-text disabled:opacity-40 disabled:hover:border-themeBorder disabled:hover:text-muted transition-all duration-300"
-              >
-                Trang Sau
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
           )}
         </>
       )}

@@ -135,3 +135,26 @@
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
+
+/* Thanh cuộn ngang tùy biến cao cấp */
+.custom-scrollbar-x {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
+}
+.custom-scrollbar-x::-webkit-scrollbar {
+  height: 5px; /* Độ mỏng thanh cuộn ngang */
+}
+.custom-scrollbar-x::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 9999px;
+}
+.custom-scrollbar-x::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+  transition: all 0.3s ease;
+}
+.custom-scrollbar-x::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+  box-shadow: 0 0 8px var(--primary);
+}
+

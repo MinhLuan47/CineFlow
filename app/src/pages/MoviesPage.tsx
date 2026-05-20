@@ -9,7 +9,7 @@ import {
     getUpcomingMovies,
 } from '../services/movieApi';
 import { useMovies } from '../hooks/useMovies';
-import { MovieCard, LoadingState, ErrorState, EmptyState } from '../components';
+import { MovieCard, LoadingState, ErrorState, EmptyState, Pagination } from '../components';
 import type { Movie } from '../types/movie';
 import type { NormalizedMovie } from '../types/api';
 
@@ -181,27 +181,11 @@ export const MoviesPage: React.FC = () => {
 
                     {/* Phân trang (Pagination) */}
                     {movies && movies.length > 0 && (
-                        <div className="flex items-center justify-center gap-4 mt-12 pt-6 border-t border-themeBorder/20">
-                            <button
-                                onClick={() => handlePageChange(page - 1)}
-                                disabled={page <= 1}
-                                className="flex items-center gap-1 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sharp border border-themeBorder bg-surface text-muted hover:border-primary hover:text-text disabled:opacity-40 disabled:hover:border-themeBorder disabled:hover:text-muted transition-all duration-300"
-                            >
-                                Trang Trước
-                            </button>
-
-                            <span className="text-xs font-bold text-muted">
-                                Trang <span className="text-primary">{page}</span> / {totalPages}
-                            </span>
-
-                            <button
-                                onClick={() => handlePageChange(page + 1)}
-                                disabled={page >= totalPages}
-                                className="flex items-center gap-1 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sharp border border-themeBorder bg-surface text-muted hover:border-primary hover:text-text disabled:opacity-40 disabled:hover:border-themeBorder disabled:hover:text-muted transition-all duration-300"
-                            >
-                                Trang Sau
-                            </button>
-                        </div>
+                        <Pagination
+                            currentPage={page}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                        />
                     )}
                 </>
             )}

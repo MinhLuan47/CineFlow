@@ -155,7 +155,7 @@ export const MovieLibrary: React.FC = () => {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10 pb-6 border-b border-themeBorder/40">
         
         {/* Nhóm Tabs chuyển mục */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 lg:pb-0 scrollbar-none -mx-4 px-4 lg:mx-0 lg:px-0">
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 px-4 lg:mx-0 lg:px-0 -mx-4 custom-scrollbar-x">
           {tabs.map((tab) => {
             const TabIcon = tab.icon;
             const isActive = activeTab === tab.id;
