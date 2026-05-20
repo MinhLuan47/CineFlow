@@ -25,8 +25,8 @@ export default {
         sharp: "2px",
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        display: ["Outfit", "sans-serif"], // Font chữ tiêu đề lớn ấn tượng
+        sans: ["'Plus Jakarta Sans'", "system-ui", "sans-serif"],
+        display: ["Urbanist", "sans-serif"], // Font chữ tiêu đề lớn ấn tượng
       },
     },
   },
