@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Library, Sparkles, Film, PlaySquare, X, RefreshCw } from "lucide-react";
-import { MovieCard, Button, SectionHeader, Container } from "../components";
+import { Search, Library, Sparkles, Film, PlaySquare, X } from "lucide-react";
+import { MovieCard, Button, SectionHeader, Container, LoadingState, ErrorState, EmptyState } from "../components";
 import {
   getNowPlayingMovies,
   getPopularMovies,
@@ -42,9 +42,7 @@ const mapNormalizedToMovie = (normalized: NormalizedMovie): Movie => {
 
 /**
  * Phần "Khám Phá Thư Viện Phim" (Movie Library Preview Section).
- * - Kết nối các tab tới các API danh sách phim tương ứng trên Backend Proxy.
- * - Hỗ trợ tìm kiếm theo từ khóa trong danh mục.
- * - Hiển thị Shimmer Skeleton khi tải dữ liệu, tự động kích hoạt bộ nhớ đệm (Cache) trên Backend.
+ * - Sử dụng các thành phần trạng thái LoadingState, ErrorState, EmptyState chuẩn hóa.
  */
 export const MovieLibrary: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("new-releases");
@@ -87,7 +85,6 @@ export const MovieLibrary: React.FC = () => {
       console.warn(`Lỗi tải dữ liệu cho tab ${tab}, chuyển sang chế độ ngoại tuyến:`, err);
       setError(err instanceof Error ? err : new Error(String(err)));
       
-      // Khởi tạo các mảng dữ liệu giả lập dự phòng phân vùng theo tab
       const sample = getNormalizedSampleMovies();
       if (tab === "new-releases") {
         setMovies(sample.slice(0, 6));
@@ -202,32 +199,18 @@ export const MovieLibrary: React.FC = () => {
 
       </div>
 
-      {/* Hiển thị thông báo chế độ ngoại tuyến nếu API lỗi */}
+      {/* Hiển thị thông báo lỗi từ ErrorState chuẩn hóa */}
       {error && (
-        <div className="mb-8 px-5 py-3 bg-red-950/30 border border-red-500/20 text-red-400 text-xs rounded-sharp flex items-center justify-between gap-4 animate-fade-in">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-ping" />
-            <span>Đang hiển thị dữ liệu dự phòng ngoại tuyến của tab do mất kết nối máy chủ.</span>
-          </div>
-          <button 
-            onClick={() => fetchTabData(activeTab)} 
-            className="flex items-center gap-1 font-bold text-red-300 hover:text-red-200 transition-colors underline decoration-dotted"
-          >
-            <RefreshCw className="w-3 h-3" />
-            Thử lại
-          </button>
-        </div>
+        <ErrorState onRetry={() => fetchTabData(activeTab)} variant="banner" />
       )}
 
       {/* Lưới phim hoặc Khung xương tải dữ liệu */}
       {loading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 sm:gap-6">
-          {Array.from({ length: 6 }).map((_, idx) => (
-            <div key={`skeleton-lib-${idx}`} className="w-full">
-              <MovieCard loading={true} />
-            </div>
-          ))}
-        </div>
+        <LoadingState 
+          variant="skeleton" 
+          skeletonCount={6} 
+          gridClass="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 sm:gap-6" 
+        />
       ) : (
         <motion.div
           variants={containerVariants}
@@ -257,21 +240,16 @@ export const MovieLibrary: React.FC = () => {
         </motion.div>
       )}
 
+      {/* Hiển thị EmptyState chuẩn hóa */}
       {!loading && displayedMovies.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-24 text-center border border-dashed border-themeBorder/60 rounded-sharp">
-          <p className="text-muted text-sm max-w-xs">
-            Không tìm thấy phim nào khớp với từ khoá <span className="text-text font-bold">"{searchQuery}"</span> hoặc trong danh mục đã chọn.
-          </p>
-          <button 
-            onClick={() => {
-              setSearchQuery("");
-              setActiveTab("new-releases");
-            }}
-            className="mt-6 text-xs text-primary font-black uppercase tracking-wider underline hover:text-primary-dark transition-colors"
-          >
-            Đặt lại bộ lọc
-          </button>
-        </div>
+        <EmptyState 
+          message={`Không tìm thấy phim nào khớp với từ khoá "${searchQuery}" hoặc trong danh mục đã chọn.`}
+          onReset={() => {
+            setSearchQuery("");
+            setActiveTab("new-releases");
+          }}
+          resetText="Đặt lại bộ lọc"
+        />
       )}
     </Container>
   );

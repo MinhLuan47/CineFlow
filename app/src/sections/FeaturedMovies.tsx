@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, Clapperboard, Filter, RefreshCw } from "lucide-react";
-import { MovieCard, Button, SectionHeader, Container } from "../components";
+import { ChevronRight, Clapperboard, Filter } from "lucide-react";
+import { MovieCard, Button, SectionHeader, Container, LoadingState, ErrorState, EmptyState } from "../components";
 import { useTrendingMovies } from "../hooks/useMovies";
 import type { Movie } from "../types/movie";
 import type { NormalizedMovie } from "../types/api";
@@ -36,9 +36,7 @@ const mapNormalizedToMovie = (normalized: NormalizedMovie): Movie => {
 
 /**
  * Phần "Phim Đề Cử Nổi Bật" (Featured Movies Section).
- * - Kết nối trực tiếp đến Endpoint /api/movies/trending thông qua useTrendingMovies Hook.
- * - Hỗ trợ dữ liệu giả lập (Offline Fallback) và hiển thị thông báo nếu gọi API gặp sự cố.
- * - Hiển thị khung xương tải dữ liệu (Skeleton Card Shimmer) trong thời gian chờ đợi.
+ * - Sử dụng các thành phần LoadingState, ErrorState và EmptyState chuẩn hóa.
  */
 export const FeaturedMovies: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<string>("all");
@@ -64,7 +62,6 @@ export const FeaturedMovies: React.FC = () => {
       const category = categories.find((c) => c.id === activeFilter);
       if (!category || !category.genreName) return true;
       
-      // So sánh không phân biệt chữ hoa/thường để tránh lệch định dạng dịch
       return movie.genres.some(
         (g) => g.toLowerCase().includes(category.genreName!.toLowerCase())
       );
@@ -125,35 +122,19 @@ export const FeaturedMovies: React.FC = () => {
         </div>
       </div>
 
-      {/* Hiển thị lỗi nhỏ thân thiện nếu API bị lỗi */}
+      {/* Hiển thị lỗi nhỏ thân thiện từ ErrorState chuẩn hóa */}
       {error && (
-        <div className="mb-8 px-5 py-3 bg-red-950/30 border border-red-500/20 text-red-400 text-xs rounded-sharp flex items-center justify-between gap-4 animate-fade-in">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-ping" />
-            <span>Đang hoạt động ở chế độ ngoại tuyến (Fake Data) do không kết nối được máy chủ.</span>
-          </div>
-          <button 
-            onClick={() => refetch()} 
-            className="flex items-center gap-1 font-bold text-red-300 hover:text-red-200 transition-colors underline decoration-dotted"
-          >
-            <RefreshCw className="w-3 h-3" />
-            Thử lại
-          </button>
-        </div>
+        <ErrorState onRetry={refetch} variant="banner" />
       )}
 
       {/* Lưới Phim Responsive */}
       {loading ? (
-        // 1. GIAO DIỆN SKELETON KHI ĐANG TẢI DỮ LIỆU
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10">
-          {Array.from({ length: 8 }).map((_, idx) => (
-            <div key={`skeleton-${idx}`} className="w-full">
-              <MovieCard loading={true} />
-            </div>
-          ))}
-        </div>
+        <LoadingState 
+          variant="skeleton" 
+          skeletonCount={8} 
+          gridClass="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10" 
+        />
       ) : (
-        // 2. GIAO DIỆN HIỂN THỊ DANH SÁCH PHIM ĐÃ TẢI XONG
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -182,10 +163,13 @@ export const FeaturedMovies: React.FC = () => {
         </motion.div>
       )}
 
+      {/* Hiển thị EmptyState chuẩn hóa */}
       {!loading && displayMovies.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-20 text-center border border-dashed border-themeBorder rounded-sharp">
-          <p className="text-muted text-sm">Chưa có phim đề cử thuộc thể loại này. Vui lòng chọn thể loại khác.</p>
-        </div>
+        <EmptyState 
+          message="Chưa có phim đề cử thuộc thể loại này. Vui lòng chọn thể loại khác." 
+          onReset={() => setActiveFilter("all")}
+          resetText="Quay lại tất cả"
+        />
       )}
 
       {/* Nút xem tất cả phim */}
