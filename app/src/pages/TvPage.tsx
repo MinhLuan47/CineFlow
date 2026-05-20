@@ -1,92 +1,172 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useCallback } from "react";
+import { useLocation, useSearchParams, Link } from "react-router-dom";
 import { Tv, Flame, Star, Calendar, Layers } from "lucide-react";
+import {
+  getTrendingTv,
+  getPopularTv,
+  getOnTheAirTv,
+  getTopRatedTv
+} from "../services/tvApi";
+import { useTv } from "../hooks/useTv";
+import { MediaCard, LoadingState, ErrorState, EmptyState } from "../components";
+import type { NormalizedTvSeries } from "../types/api";
 
 /**
- * TvPage - Trang khám phá danh sách phim truyền hình (TV Series) đa tập.
+ * TvPage - Trang khám phá và phân loại phim truyền hình dài tập (TV Series).
  */
 export const TvPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<string>("trending");
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const tabs = [
-    { id: "trending", label: "Xu Hướng", icon: Flame, desc: "Phim bộ được theo dõi nhiều nhất tuần qua." },
-    { id: "popular", label: "Phổ Biến", icon: Layers, desc: "Phim bộ kinh điển có số lượng người xem áp đảo." },
-    { id: "top-rated", label: "Đánh Giá Cao", icon: Star, desc: "Điểm số IMDb cao ngất ngưởng từ người hâm mộ." },
-    { id: "airing-today", label: "Phát Sóng Hôm Nay", icon: Calendar, desc: "Các tập phim mới chuẩn bị lên sóng hôm nay." }
+  // Đọc chỉ số trang hiện tại từ URL query params (?page=X)
+  const page = parseInt(searchParams.get("page") || "1", 10);
+  
+  // Xác định danh mục dựa trên đường dẫn URL (pathname)
+  const pathname = location.pathname;
+  let activeCategory = "trending";
+  if (pathname.endsWith("/popular")) {
+    activeCategory = "popular";
+  } else if (pathname.endsWith("/top-rated")) {
+    activeCategory = "top-rated";
+  } else if (pathname.endsWith("/on-the-air")) {
+    activeCategory = "on-the-air";
+  }
+
+  const categories = [
+    { id: "trending", label: "Xu Hướng", icon: Flame, desc: "Phim truyền hình được thảo luận sôi nổi và quan tâm nhiều nhất hôm nay." },
+    { id: "popular", label: "Phổ Biến", icon: Layers, desc: "Những series dài tập kinh điển có lượng khán giả theo dõi đông đảo nhất." },
+    { id: "top-rated", label: "Đánh Giá Cao", icon: Star, desc: "Các tác phẩm truyền hình nhận điểm số đánh giá xuất sắc nhất từ cộng đồng." },
+    { id: "on-the-air", label: "Đang Phát Sóng", icon: Calendar, desc: "Các tập phim mới vừa phát sóng hoặc chuẩn bị phát sóng trong tuần này." }
   ];
 
-  const currentTab = tabs.find(t => t.id === activeTab) || tabs[0];
+  const currentCat = categories.find(c => c.id === activeCategory) || categories[0];
+
+  /**
+   * Tạo fetcher động phản ứng với category và page thay đổi.
+   * Tất cả yêu cầu đều mặc định dùng vi-VN và khu vực VN.
+   */
+  const fetcher = useCallback(() => {
+    const queryParams = { page, language: "vi-VN", region: "VN" };
+    switch (activeCategory) {
+      case "popular":
+        return getPopularTv(queryParams);
+      case "top-rated":
+        return getTopRatedTv(queryParams);
+      case "on-the-air":
+        return getOnTheAirTv(queryParams);
+      case "trending":
+      default:
+        return getTrendingTv(queryParams);
+    }
+  }, [activeCategory, page]);
+
+  // Sử dụng custom hook useTv để gọi API và lấy dữ liệu
+  const { data: tvSeriesList, meta, loading, error, refetch } = useTv<NormalizedTvSeries[]>(fetcher);
+
+  // Xử lý chuyển đổi trang
+  const handlePageChange = (newPage: number) => {
+    setSearchParams({ page: newPage.toString() });
+    // Cuộn mượt mà lên đầu trang
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const totalPages = meta?.totalPages || 1;
 
   return (
-    <div className="container-custom py-10 min-h-[60vh]">
-      {/* Tiêu đề trang */}
+    <div className="container-custom py-10 min-h-[60vh] text-left">
+      {/* Tiêu đề trang & Danh mục Tabs */}
       <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-themeBorder/40 pb-6 mb-8 gap-4">
         <div>
           <div className="flex items-center gap-2 text-gold font-bold text-xs uppercase tracking-widest mb-2">
-            <Tv className="w-4 h-4" />
-            <span>Phim Truyền Hình / {currentTab.label}</span>
+            <Tv className="w-4 h-4 text-gold" />
+            <span>Phim Bộ / {currentCat.label}</span>
           </div>
           <h1 className="font-display font-extrabold text-3xl md:text-5xl tracking-tight text-text">
             PHIM <span className="text-gold">TRUYỀN HÌNH</span>
           </h1>
-          <p className="text-muted text-sm mt-2 max-w-2xl">{currentTab.desc}</p>
+          <p className="text-muted text-sm mt-2 max-w-2xl">{currentCat.desc}</p>
         </div>
 
         {/* Danh sách tab danh mục */}
         <div className="flex flex-wrap gap-2">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = tab.id === activeTab;
+          {categories.map((cat) => {
+            const IconComponent = cat.icon;
+            const isActive = cat.id === activeCategory;
             return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+              <Link
+                key={cat.id}
+                to={cat.id === "trending" ? "/tv" : `/tv/${cat.id}`}
                 className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sharp border transition-all duration-300 ${
                   isActive
                     ? "bg-gold text-background border-gold shadow-lg shadow-gold/25"
                     : "bg-surface border-themeBorder text-muted hover:border-gold/40 hover:text-text"
                 }`}
               >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{tab.label}</span>
-              </button>
+                <IconComponent className="w-3.5 h-3.5" />
+                <span>{cat.label}</span>
+              </Link>
             );
           })}
         </div>
       </div>
 
-      {/* Grid danh sách phim bộ */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-        {Array.from({ length: 12 }).map((_, idx) => (
-          <Link
-            key={idx}
-            to={`/tv/${idx + 200}`}
-            className="group relative bg-surface border border-themeBorder rounded-sharp overflow-hidden transition-all duration-300 hover:border-gold hover:-translate-y-1"
-          >
-            <div className="aspect-[2/3] w-full bg-themeBorder relative overflow-hidden flex items-center justify-center">
-              <Tv className="w-10 h-10 text-muted opacity-30 group-hover:scale-110 transition-transform duration-300" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60" />
-              
-              <span className="absolute top-2 right-2 text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-sharp bg-black/60 backdrop-blur-sm border border-white/10 text-gold">
-                Phim bộ
-              </span>
-            </div>
-            
-            <div className="p-3">
-              <h3 className="font-bold text-xs text-text truncate group-hover:text-gold transition-colors">
-                Series Truyền Hình #{idx + 1}
-              </h3>
-              <div className="flex items-center justify-between mt-2 text-[10px] text-muted">
-                <span>Mùa 1 (2026)</span>
-                <div className="flex items-center gap-0.5 text-gold">
-                  <Star className="w-2.5 h-2.5 fill-current" />
-                  <span>8.8</span>
+      {/* Hiển thị lỗi kết nối nếu API gặp vấn đề */}
+      {error && (
+        <ErrorState onRetry={refetch} variant="banner" />
+      )}
+
+      {/* Lưới Phim truyền hình chính hoặc Khung xương tải dữ liệu */}
+      {loading ? (
+        <LoadingState
+          variant="skeleton"
+          skeletonCount={12}
+          gridClass="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"
+        />
+      ) : (
+        <>
+          {tvSeriesList && tvSeriesList.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+              {tvSeriesList.map((item) => (
+                <div 
+                  key={item.id} 
+                  className="hover:-translate-y-1 transition-transform duration-300"
+                >
+                  <MediaCard item={item} />
                 </div>
-              </div>
+              ))}
             </div>
-          </Link>
-        ))}
-      </div>
+          ) : (
+            <EmptyState
+              message={`Hiện chưa có bộ phim truyền hình nào thuộc danh mục "${currentCat.label}".`}
+            />
+          )}
+
+          {/* Phân trang (Pagination) */}
+          {tvSeriesList && tvSeriesList.length > 0 && (
+            <div className="flex items-center justify-center gap-4 mt-12 pt-6 border-t border-themeBorder/20">
+              <button
+                onClick={() => handlePageChange(page - 1)}
+                disabled={page <= 1}
+                className="flex items-center gap-1 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sharp border border-themeBorder bg-surface text-muted hover:border-gold hover:text-text disabled:opacity-40 disabled:hover:border-themeBorder disabled:hover:text-muted transition-all duration-300"
+              >
+                Trang Trước
+              </button>
+
+              <span className="text-xs font-bold text-muted">
+                Trang <span className="text-gold">{page}</span> / {totalPages}
+              </span>
+
+              <button
+                onClick={() => handlePageChange(page + 1)}
+                disabled={page >= totalPages}
+                className="flex items-center gap-1 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sharp border border-themeBorder bg-surface text-muted hover:border-gold hover:text-text disabled:opacity-40 disabled:hover:border-themeBorder disabled:hover:text-muted transition-all duration-300"
+              >
+                Trang Sau
+              </button>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 };

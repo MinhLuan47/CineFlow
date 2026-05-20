@@ -34,6 +34,9 @@ export const AppRoutes: React.FC = () => {
 
         {/* Phim truyền hình dài tập */}
         <Route path="/tv" element={<TvPage />} />
+        <Route path="/tv/popular" element={<TvPage />} />
+        <Route path="/tv/top-rated" element={<TvPage />} />
+        <Route path="/tv/on-the-air" element={<TvPage />} />
         <Route path="/tv/:id" element={<TvDetailPage />} />
 
         {/* Tìm kiếm */}
