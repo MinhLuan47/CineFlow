@@ -7,6 +7,7 @@ import { sendSuccess, ApiError } from './utils/response';
 import { asyncHandler } from './utils/async-handler';
 import { errorMiddleware } from './middlewares/error.middleware';
 import { notFoundMiddleware } from './middlewares/not-found.middleware';
+import { tmdbService } from './services/tmdb.service';
 
 const app = express();
 
@@ -52,6 +53,15 @@ if (env.NODE_ENV === 'development') {
     })
   );
 }
+
+// Endpoint thử nghiệm cấu hình TMDB API kết nối thực tế
+app.get(
+  '/api/tmdb/configuration',
+  asyncHandler(async (req: Request, res: Response) => {
+    const configData = await tmdbService.get<any>('/configuration');
+    sendSuccess(res, configData, 'Kết nối và tải cấu hình TMDB thành công');
+  })
+);
 
 // Xử lý khi client truy cập các route không tồn tại (404 Not Found)
 app.use(notFoundMiddleware);
