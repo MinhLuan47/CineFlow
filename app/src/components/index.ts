@@ -10,6 +10,7 @@ export { Button } from "./Button";
 export { SectionHeader } from "./SectionHeader";
 export { Container } from "./Container";
 export { ScrollToTop } from "./ScrollToTop";
+export { ScrollToTopOnNavigate } from "./ScrollToTopOnNavigate";
 export { MovieCardSkeleton } from "./ui/MovieCardSkeleton";
 export { LoadingState } from "./ui/LoadingState";
 export { ErrorState } from "./ui/ErrorState";

@@ -101,7 +101,7 @@ export const FaqPage: React.FC = () => {
           placeholder="Nhập từ khóa tìm kiếm câu hỏi..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full bg-surface/30 border border-themeBorder/60 focus:border-gold rounded-sharp py-3 pl-11 pr-4 text-sm text-text focus:outline-none transition-all placeholder:text-muted"
+          className="w-full bg-surface border border-themeBorder/60 focus:border-gold rounded-sharp py-3 pl-11 pr-4 text-sm text-text focus:outline-none transition-all placeholder:text-muted"
         />
         <Search className="w-5 h-5 text-muted absolute left-4 top-3.5" />
       </div>
@@ -262,7 +262,7 @@ export const ContactPage: React.FC = () => {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="bg-surface/30 border border-themeBorder/60 focus:border-gold rounded-sharp px-4 py-2.5 text-xs text-text focus:outline-none transition-all"
+                  className="bg-surface border border-themeBorder/60 focus:border-gold rounded-sharp px-4 py-2.5 text-xs text-text focus:outline-none transition-all"
                   placeholder="Nguyễn Văn A"
                 />
               </div>
@@ -274,7 +274,7 @@ export const ContactPage: React.FC = () => {
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="bg-surface/30 border border-themeBorder/60 focus:border-gold rounded-sharp px-4 py-2.5 text-xs text-text focus:outline-none transition-all"
+                  className="bg-surface border border-themeBorder/60 focus:border-gold rounded-sharp px-4 py-2.5 text-xs text-text focus:outline-none transition-all"
                   placeholder="email@example.com"
                 />
               </div>
@@ -286,7 +286,7 @@ export const ContactPage: React.FC = () => {
                   required
                   value={formData.msg}
                   onChange={(e) => setFormData({ ...formData, msg: e.target.value })}
-                  className="bg-surface/30 border border-themeBorder/60 focus:border-gold rounded-sharp px-4 py-2.5 text-xs text-text focus:outline-none transition-all resize-none"
+                  className="bg-surface border border-themeBorder/60 focus:border-gold rounded-sharp px-4 py-2.5 text-xs text-text focus:outline-none transition-all resize-none"
                   placeholder="Hãy viết tin nhắn của bạn tại đây..."
                 />
               </div>
