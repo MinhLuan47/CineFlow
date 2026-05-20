@@ -9,6 +9,7 @@ export { Badge } from "./ui/Badge";
 export { Button } from "./ui/Button";
 export { SectionHeader } from "./ui/SectionHeader";
 export { Container } from "./ui/Container";
+export { Card } from "./ui/Card";
 export { ScrollToTop } from "./ScrollToTop";
 export { ScrollToTopOnNavigate } from "./ScrollToTopOnNavigate";
 export { MovieCardSkeleton } from "./ui/MovieCardSkeleton";

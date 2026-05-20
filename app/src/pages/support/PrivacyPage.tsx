@@ -1,20 +1,24 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Shield } from "lucide-react";
+import { Container, SectionHeader } from "../../components";
 
 export const PrivacyPage: React.FC = () => {
   return (
-    <div className="container-custom py-10 text-left max-w-3xl">
+    <Container py="none" className="py-10 text-left max-w-3xl">
       <Link to="/" className="inline-flex items-center gap-1 text-xs text-muted hover:text-gold mb-6 transition-colors">
         <ArrowLeft className="w-3.5 h-3.5" /> Quay lại
       </Link>
 
-      <div className="border-b border-themeBorder/40 pb-6 mb-8">
-        <h1 className="font-display font-extrabold text-3xl md:text-5xl text-text uppercase">
-          Chính Sách <span className="text-gold">Bảo Mật</span>
-        </h1>
-        <p className="text-muted text-sm mt-2">Quyền riêng tư của bạn là ưu tiên hàng đầu của chúng tôi.</p>
-      </div>
+      <SectionHeader
+        title={
+          <>
+            Chính Sách <span className="text-gold">Bảo Mật</span>
+          </>
+        }
+        subtitle="Quyền riêng tư của bạn là ưu tiên hàng đầu của chúng tôi."
+        className="border-b border-themeBorder/40 pb-6 mb-8 gap-2"
+      />
 
       <div className="prose prose-invert text-xs text-muted leading-relaxed space-y-6">
         <section>
@@ -38,6 +42,6 @@ export const PrivacyPage: React.FC = () => {
           <p>Chính sách bảo mật này có thể thay đổi tùy thuộc vào quá trình phát triển tính năng của ứng dụng. Mọi cập nhật sẽ được hiển thị ngay tại trang này.</p>
         </section>
       </div>
-    </div>
+    </Container>
   );
 };

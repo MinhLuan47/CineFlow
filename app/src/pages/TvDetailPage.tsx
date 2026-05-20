@@ -7,7 +7,7 @@ import {
   useTvRecommendations,
   useTvSimilar
 } from "../hooks/useTvDetail";
-import { MediaCard, LoadingState, ErrorState, CastGrid, Button, Badge } from "../components";
+import { MediaCard, LoadingState, ErrorState, CastGrid, Button, Badge, Container } from "../components";
 import { useWatchlist } from "../hooks/useWatchlist";
 
 /**
@@ -50,7 +50,7 @@ export const TvDetailPage: React.FC = () => {
 
   if (detailError || !tvShow) {
     return (
-      <div className="container-custom py-24 min-h-[70vh] flex flex-col items-center justify-center">
+      <Container py="none" className="py-24 min-h-[70vh] flex flex-col items-center justify-center">
         <ErrorState
           variant="blocking"
           message={`Không thể tải thông tin chi tiết cho phim bộ mã số: #${tvId}. Vui lòng kiểm tra lại kết nối mạng hoặc quay lại trang chủ.`}
@@ -62,7 +62,7 @@ export const TvDetailPage: React.FC = () => {
         >
           Quay lại danh sách Phim bộ
         </Link>
-      </div>
+      </Container>
     );
   }
 
@@ -111,7 +111,7 @@ export const TvDetailPage: React.FC = () => {
       </div>
 
       {/* 2. Khối thông tin trung tâm */}
-      <div className="container-custom relative z-20 -mt-40 md:-mt-64 px-4 md:px-8">
+      <Container py="none" className="relative z-20 -mt-40 md:-mt-64 px-4 md:px-8">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
           
           {/* A. Poster hiển thị hình ảnh */}
@@ -341,7 +341,7 @@ export const TvDetailPage: React.FC = () => {
           )}
         </div>
 
-      </div>
+      </Container>
     </div>
   );
 };
@@ -353,7 +353,7 @@ const TvDetailSkeleton: React.FC = () => {
   return (
     <div className="min-h-screen pb-20 bg-background text-left animate-pulse">
       <div className="relative w-full h-[50vh] bg-surface/30" />
-      <div className="container-custom relative z-20 -mt-36 px-8 flex flex-col lg:flex-row gap-12">
+      <Container py="none" className="relative z-20 -mt-36 px-8 flex flex-col lg:flex-row gap-12">
         <div className="w-52 md:w-72 aspect-[2/3] bg-surface border border-themeBorder/40 rounded-sharp flex-shrink-0" />
         <div className="flex-1 lg:pt-16 space-y-4">
           <div className="h-4 bg-surface w-24 rounded" />
@@ -370,7 +370,7 @@ const TvDetailSkeleton: React.FC = () => {
             <div className="h-10 bg-surface w-28 rounded" />
           </div>
         </div>
-      </div>
+      </Container>
     </div>
   );
 };

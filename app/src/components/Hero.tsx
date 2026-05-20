@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Compass, Flame, Play, ShieldCheck } from 'lucide-react';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Badge, Button } from '../components';
+import { Badge, Button, Container } from '../components';
 import { fallbackMovies } from '../data/movies';
 import type { Movie } from '../types/movie';
 import { HeroImageCluster } from './HeroImageCluster';
@@ -48,7 +48,7 @@ export const Hero: React.FC = () => {
                 <div className="absolute bottom-[20%] right-[-10%] w-[45%] h-[50%] rounded-full glow-gold opacity-15 blur-3xl pointer-events-none" />
             </div>
 
-            <div className="container-custom relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center min-h-[85vh]">
+            <Container py="none" className="relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center min-h-[85vh]">
                 {/* Cột bên trái: Tiêu đề, badges, mô tả và nút bấm */}
                 <motion.div
                     variants={containerVariants}
@@ -127,7 +127,7 @@ export const Hero: React.FC = () => {
 
                 {/* Cột bên phải: Thẻ preview phim */}
                 <HeroImageCluster />
-            </div>
+            </Container>
 
             <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none z-10" />
 

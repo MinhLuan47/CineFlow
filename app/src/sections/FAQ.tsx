@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus, HelpCircle } from "lucide-react";
-import { Container, SectionHeader } from "../components";
+import { Container, SectionHeader, Card } from "../components";
 
 interface FAQItem {
   question: string;
@@ -85,48 +85,51 @@ export const FAQ: React.FC = () => {
             <motion.div
               key={index}
               variants={itemVariants}
-              className={`border transition-colors duration-300 rounded-sharp overflow-hidden ${
-                isOpen 
-                  ? "bg-surface/60 border-primary/30 shadow-[0_0_20px_rgba(229,9,20,0.02)]" 
-                  : "bg-surface/30 border-themeBorder hover:border-themeBorder/80"
-              }`}
             >
-              <button
-                onClick={() => toggleAccordion(index)}
-                className="w-full flex items-center justify-between text-left p-5 focus:outline-none group"
+              <Card
+                variant={isOpen ? "glass" : "default"}
+                className={`transition-colors duration-300 overflow-hidden ${
+                  isOpen 
+                    ? "bg-surface/60 border-primary/30 shadow-[0_0_20px_rgba(229,9,20,0.02)]" 
+                    : "bg-surface/30 border-themeBorder hover:border-themeBorder/80"
+                }`}
               >
-                <span className={`font-bold text-sm md:text-base transition-colors duration-300 ${
-                  isOpen ? "text-primary" : "text-text group-hover:text-primary"
-                }`}>
-                  {faq.question}
-                </span>
-                
-                <span className={`flex-shrink-0 ml-4 p-1 rounded-sharp border border-themeBorder bg-background/50 text-muted group-hover:text-text transition-transform duration-300 ${
-                  isOpen ? "rotate-180 border-primary/20 text-primary" : ""
-                }`}>
-                  {isOpen ? (
-                    <Minus className="w-4 h-4 text-primary" />
-                  ) : (
-                    <Plus className="w-4 h-4" />
+                <button
+                  onClick={() => toggleAccordion(index)}
+                  className="w-full flex items-center justify-between text-left p-5 focus:outline-none group"
+                >
+                  <span className={`font-bold text-sm md:text-base transition-colors duration-300 ${
+                    isOpen ? "text-primary" : "text-text group-hover:text-primary"
+                  }`}>
+                    {faq.question}
+                  </span>
+                  
+                  <span className={`flex-shrink-0 ml-4 p-1 rounded-sharp border border-themeBorder bg-background/50 text-muted group-hover:text-text transition-transform duration-300 ${
+                    isOpen ? "rotate-180 border-primary/20 text-primary" : ""
+                  }`}>
+                    {isOpen ? (
+                      <Minus className="w-4 h-4 text-primary" />
+                    ) : (
+                      <Plus className="w-4 h-4" />
+                    )}
+                  </span>
+                </button>
+
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: "easeInOut" }}
+                    >
+                      <div className="px-5 pb-5 pt-1 text-xs md:text-sm text-muted leading-relaxed border-t border-themeBorder/40 bg-surface/10">
+                        {faq.answer}
+                      </div>
+                    </motion.div>
                   )}
-                </span>
-              </button>
-
-              <AnimatePresence initial={false}>
-                {isOpen && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25, ease: "easeInOut" }}
-                  >
-                    <div className="px-5 pb-5 pt-1 text-xs md:text-sm text-muted leading-relaxed border-t border-themeBorder/40 bg-surface/10">
-                      {faq.answer}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
+                </AnimatePresence>
+              </Card>
             </motion.div>
           );
         })}

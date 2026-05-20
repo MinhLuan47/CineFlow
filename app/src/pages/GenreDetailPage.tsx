@@ -3,7 +3,7 @@ import { useParams, useSearchParams, Link } from "react-router-dom";
 import { ArrowLeft, SlidersHorizontal } from "lucide-react";
 import { discoverMovies, discoverTv } from "../services/genreApi";
 import { useGenres } from "../hooks/useGenres";
-import { MediaCard, LoadingState, ErrorState, EmptyState, Pagination } from "../components";
+import { MediaCard, LoadingState, ErrorState, EmptyState, Pagination, Container, SectionHeader } from "../components";
 import type { NormalizedMovie, NormalizedTvSeries } from "../types/api";
 
 // Các tùy chọn sắp xếp hiển thị ở giao diện
@@ -123,44 +123,44 @@ export const GenreDetailPage: React.FC = () => {
   };
 
   return (
-    <div className="container-custom py-10 min-h-[60vh] text-left">
+    <Container py="none" className="py-10 min-h-[60vh] text-left" as="div">
       
       {/* Nút Quay lại & Tiêu đề trang */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-themeBorder/40 pb-6 mb-8 gap-4">
-        <div>
-          <Link 
-            to="/genres" 
-            className="inline-flex items-center gap-2 text-xs font-bold text-muted hover:text-primary transition-colors uppercase tracking-wider mb-4"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Danh mục thể loại</span>
-          </Link>
-          
-          <h1 className="font-display font-extrabold text-3xl md:text-5xl tracking-tight text-text uppercase">
+      <Link 
+        to="/genres" 
+        className="inline-flex items-center gap-2 text-xs font-bold text-muted hover:text-primary transition-colors uppercase tracking-wider mb-4"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        <span>Danh mục thể loại</span>
+      </Link>
+      
+      <SectionHeader
+        title={
+          <>
             THỂ LOẠI: <span className="text-primary">{genreName}</span>
-          </h1>
-          <p className="text-muted text-sm mt-2">
-            Danh sách các tác phẩm {genreName.toLowerCase()} thuộc dòng {typeLabel.toLowerCase()}.
-          </p>
-        </div>
+          </>
+        }
+        description={`Danh sách các tác phẩm ${genreName.toLowerCase()} thuộc dòng ${typeLabel.toLowerCase()}.`}
+        action={
+          <div className="flex items-center gap-3 bg-surface border border-themeBorder px-3 py-1.5 rounded-sharp">
+            <SlidersHorizontal className="w-4 h-4 text-muted" />
+            <span className="text-xs font-bold text-muted uppercase tracking-wider">Sắp xếp:</span>
+            <select
+              value={sort}
+              onChange={(e) => handleSortChange(e.target.value)}
+              className="bg-transparent text-xs font-bold text-text focus:outline-none cursor-pointer pr-4"
+            >
+              {SORT_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value} className="bg-surface text-text">
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        }
+        className="border-b border-themeBorder/40 pb-6 mb-8 gap-4 mb-8"
+      />
 
-        {/* Bộ lọc sắp xếp (Sort selector) */}
-        <div className="flex items-center gap-3 bg-surface border border-themeBorder px-3 py-1.5 rounded-sharp">
-          <SlidersHorizontal className="w-4 h-4 text-muted" />
-          <span className="text-xs font-bold text-muted uppercase tracking-wider">Sắp xếp:</span>
-          <select
-            value={sort}
-            onChange={(e) => handleSortChange(e.target.value)}
-            className="bg-transparent text-xs font-bold text-text focus:outline-none cursor-pointer pr-4"
-          >
-            {SORT_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value} className="bg-surface text-text">
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
 
       {/* HIỂN THỊ CÁC TRẠNG THÁI LOADING / ERROR / EMPTY / GRID CHÍNH */}
       {loading ? (
@@ -195,7 +195,7 @@ export const GenreDetailPage: React.FC = () => {
         </>
       )}
 
-    </div>
+    </Container>
   );
 };
 

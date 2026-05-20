@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Tv, Smartphone, Laptop, Gamepad2, Tablet } from "lucide-react";
+import { Container, SectionHeader, Card } from "../../components";
 
 export const DevicesPage: React.FC = () => {
   const devices = [
@@ -12,21 +13,24 @@ export const DevicesPage: React.FC = () => {
   ];
 
   return (
-    <div className="container-custom py-10 text-left">
+    <Container py="none" className="py-10 text-left">
       <Link to="/" className="inline-flex items-center gap-1 text-xs text-muted hover:text-gold mb-6 transition-colors">
         <ArrowLeft className="w-3.5 h-3.5" /> Quay lại
       </Link>
 
-      <div className="border-b border-themeBorder/40 pb-6 mb-8">
-        <h1 className="font-display font-extrabold text-3xl md:text-5xl text-text uppercase">
-          Thiết Bị <span className="text-gold">Hỗ Trợ</span>
-        </h1>
-        <p className="text-muted text-sm mt-2">Danh sách các thiết bị tương thích để thưởng thức CineFlow.</p>
-      </div>
+      <SectionHeader
+        title={
+          <>
+            Thiết Bị <span className="text-gold">Hỗ Trợ</span>
+          </>
+        }
+        subtitle="Danh sách các thiết bị tương thích để thưởng thức CineFlow."
+        className="border-b border-themeBorder/40 pb-6 mb-8 gap-2"
+      />
 
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
         {devices.map((dev, idx) => (
-          <div key={idx} className="p-6 bg-surface/20 border border-themeBorder/40 hover:border-gold/30 rounded-sharp transition-all flex flex-col gap-4">
+          <Card key={idx} variant="glass" className="hover:border-gold/30 transition-all flex flex-col gap-4">
             <div className="w-12 h-12 bg-surface/50 border border-themeBorder/60 rounded-sharp flex items-center justify-center text-gold">
               {dev.icon}
             </div>
@@ -35,9 +39,9 @@ export const DevicesPage: React.FC = () => {
               <p className="text-xs text-muted mt-2 leading-relaxed">{dev.spec}</p>
               <span className="inline-block mt-3 text-[10px] font-bold text-gold uppercase tracking-wider">{dev.quality}</span>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
-    </div>
+    </Container>
   );
 };

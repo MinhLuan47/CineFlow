@@ -1,11 +1,11 @@
 import React from "react";
 import { cn } from "../../lib/cn";
 
-interface SectionHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+interface SectionHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
   eyebrow?: string;
   accentText?: string; // alias cho khả năng tương thích ngược
   accentIcon?: React.ReactNode;
-  title: string;
+  title: React.ReactNode;
   description?: string;
   subtitle?: string; // alias cho khả năng tương thích ngược
   align?: "left" | "center";

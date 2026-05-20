@@ -18,7 +18,8 @@ import {
   WatchEpisodeSelector, 
   RelatedMediaSidebar, 
   WatchMediaInfo,
-  Button
+  Button,
+  Container
 } from "../components";
 import { useWatchHistory } from "../hooks/useWatchHistory";
 
@@ -96,7 +97,7 @@ export const WatchPage: React.FC = () => {
   // Xử lý loading và hiển thị khung xương (Skeleton)
   if (activeLoading && !activeItem) {
     return (
-      <div className="container-custom py-12 min-h-[85vh] text-left">
+      <Container py="none" className="py-12 min-h-[85vh] text-left">
         <div className="mb-6 h-4 bg-surface w-36 rounded animate-pulse" />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
@@ -109,14 +110,14 @@ export const WatchPage: React.FC = () => {
             <div className="h-[300px] bg-surface rounded-sharp animate-pulse" />
           </div>
         </div>
-      </div>
+      </Container>
     );
   }
 
   // Hiển thị lỗi blocking nếu không tìm thấy phim
   if (activeError || !activeItem) {
     return (
-      <div className="container-custom py-24 min-h-[70vh] flex flex-col items-center justify-center">
+      <Container py="none" className="py-24 min-h-[70vh] flex flex-col items-center justify-center">
         <ErrorState
           variant="blocking"
           message={`Không thể tải chương trình phát cho nội dung này (ID: #${activeId}). Vui lòng kiểm tra lại kết nối mạng.`}
@@ -128,7 +129,7 @@ export const WatchPage: React.FC = () => {
         >
           Quay lại Trang Chủ
         </Link>
-      </div>
+      </Container>
     );
   }
 
@@ -140,7 +141,7 @@ export const WatchPage: React.FC = () => {
     : "Đang cập nhật";
 
   return (
-    <div className="container-custom py-8 text-left">
+    <Container py="none" className="py-8 text-left">
       {/* Nút quay lại trang thông tin chi tiết */}
       <div className="mb-6">
         <Link 
@@ -240,7 +241,7 @@ export const WatchPage: React.FC = () => {
         </div>
 
       </div>
-    </div>
+    </Container>
   );
 };
 

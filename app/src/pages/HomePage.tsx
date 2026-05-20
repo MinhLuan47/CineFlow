@@ -1,5 +1,5 @@
 import React from 'react';
-import { Hero } from '../components';
+import { Hero, Container, Card } from '../components';
 import { FeaturedMovies, BrowseGenres, MovieLibrary, TopRanking, FAQ, FinalCTA } from '../sections';
 import { Monitor, Smartphone, Sparkles, Flame, ShieldAlert } from 'lucide-react';
 
@@ -31,7 +31,7 @@ export const HomePage: React.FC = () => {
             <FAQ />
 
             {/* Khối Banner Thông Báo */}
-            <section className="container-custom py-8">
+            <Container py="sm" as="section">
                 <div className="border border-primary/20 bg-primary/5 px-6 py-4 flex flex-col sm:flex-row items-center gap-4 rounded-sharp">
                     <ShieldAlert className="w-6 h-6 text-primary flex-shrink-0" />
                     <p className="text-sm text-muted text-center sm:text-left">
@@ -40,10 +40,10 @@ export const HomePage: React.FC = () => {
                         đoạn tiếp theo.
                     </p>
                 </div>
-            </section>
+            </Container>
 
             {/* Giới thiệu tính năng tương thích thiết bị */}
-            <section className="container-custom py-16 md:py-24">
+            <Container py="md" as="section">
                 <div className="max-w-3xl mb-16 text-center md:text-left">
                     <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest mb-3">
                         <Flame className="w-4 h-4 text-gold animate-pulse" />
@@ -61,7 +61,7 @@ export const HomePage: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="border border-themeBorder bg-surface p-8 transition-all duration-300 hover:border-primary group rounded-sharp">
+                    <Card className="p-8 hover:border-primary transition-all duration-300 group">
                         <div className="w-12 h-12 bg-background border border-themeBorder flex items-center justify-center mb-6 group-hover:border-primary/50 transition-colors rounded-sharp">
                             <Monitor className="w-6 h-6 text-primary group-hover:text-gold transition-colors duration-300" />
                         </div>
@@ -70,9 +70,9 @@ export const HomePage: React.FC = () => {
                             Ứng dụng tối ưu cho Apple TV, Android TV, LG WebOS, Samsung Tizen giúp bạn thưởng thức trọn
                             vẹn thước phim trên màn hình lớn.
                         </p>
-                    </div>
+                    </Card>
 
-                    <div className="border border-themeBorder bg-surface p-8 transition-all duration-300 hover:border-primary group rounded-sharp">
+                    <Card className="p-8 hover:border-primary transition-all duration-300 group">
                         <div className="w-12 h-12 bg-background border border-themeBorder flex items-center justify-center mb-6 group-hover:border-primary/50 transition-colors rounded-sharp">
                             <Smartphone className="w-6 h-6 text-primary group-hover:text-gold transition-colors duration-300" />
                         </div>
@@ -81,9 +81,9 @@ export const HomePage: React.FC = () => {
                             Tải ứng dụng CineFlow cho iOS và Android để xem ngoại tuyến khi đi tàu xe. Tự động đồng bộ
                             tiến trình phát phim thông minh.
                         </p>
-                    </div>
+                    </Card>
 
-                    <div className="border border-themeBorder bg-surface p-8 transition-all duration-300 hover:border-primary group rounded-sharp">
+                    <Card className="p-8 hover:border-primary transition-all duration-300 group">
                         <div className="w-12 h-12 bg-background border border-themeBorder flex items-center justify-center mb-6 group-hover:border-primary/50 transition-colors rounded-sharp">
                             <Sparkles className="w-6 h-6 text-primary group-hover:text-gold transition-colors duration-300" />
                         </div>
@@ -92,9 +92,9 @@ export const HomePage: React.FC = () => {
                             Tích hợp công nghệ âm thanh vòm Dolby Atmos và chất lượng hình ảnh Ultra HD 4K HDR mang rạp
                             chiếu phim chuyên nghiệp về phòng ngủ.
                         </p>
-                    </div>
+                    </Card>
                 </div>
-            </section>
+            </Container>
 
             {/* Kêu gọi hành động cuối trang */}
             <FinalCTA />

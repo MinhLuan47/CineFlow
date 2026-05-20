@@ -9,7 +9,7 @@ import {
     getUpcomingMovies,
 } from '../services/movieApi';
 import { useMovies } from '../hooks/useMovies';
-import { MovieCard, LoadingState, ErrorState, EmptyState, Pagination } from '../components';
+import { MovieCard, LoadingState, ErrorState, EmptyState, Pagination, SectionHeader, Container } from '../components';
 import type { NormalizedMovie } from '../types/api';
 import { mapNormalizedToMovie } from '../utils/movieMapper';
 
@@ -85,42 +85,41 @@ export const MoviesPage: React.FC = () => {
     const totalPages = meta?.totalPages || 1;
 
     return (
-        <div className="container-custom py-10 min-h-[60vh] text-left">
+        <Container py="none" className="py-10 min-h-[60vh] text-left" as="div">
             {/* Tiêu đề trang */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-themeBorder/40 pb-6 mb-8 gap-4">
-                <div>
-                    <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest mb-2">
-                        <currentCat.icon className="w-4 h-4 text-gold" />
-                        <span>Phim Điện Ảnh / {currentCat.label}</span>
-                    </div>
-                    <h1 className="font-display font-extrabold text-3xl md:text-5xl tracking-tight text-text">
+            <SectionHeader
+                accentIcon={<currentCat.icon className="w-4 h-4 text-gold" />}
+                accentText={`Phim Điện Ảnh / ${currentCat.label}`}
+                title={
+                    <>
                         PHIM <span className="text-primary">{currentCat.label.toUpperCase()}</span>
-                    </h1>
-                    <p className="text-muted text-sm mt-2 max-w-2xl">{currentCat.desc}</p>
-                </div>
-
-                {/* Bộ lọc danh mục */}
-                <div className="flex flex-wrap gap-2">
-                    {categories.map((cat) => {
-                        const IconComponent = cat.icon;
-                        const isActive = cat.id === activeCategory;
-                        return (
-                            <Link
-                                key={cat.id}
-                                to={cat.id === 'trending' ? '/movies' : `/movies/${cat.id}`}
-                                className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sharp border transition-all duration-300 ${
-                                    isActive
-                                        ? 'bg-primary text-text border-primary shadow-lg shadow-primary/20'
-                                        : 'bg-surface border-themeBorder text-muted hover:border-primary/40 hover:text-text'
-                                }`}
-                            >
-                                <IconComponent className="w-3.5 h-3.5" />
-                                <span>{cat.label}</span>
-                            </Link>
-                        );
-                    })}
-                </div>
-            </div>
+                    </>
+                }
+                description={currentCat.desc}
+                action={
+                    <div className="flex flex-wrap gap-2">
+                        {categories.map((cat) => {
+                            const IconComponent = cat.icon;
+                            const isActive = cat.id === activeCategory;
+                            return (
+                                <Link
+                                    key={cat.id}
+                                    to={cat.id === 'trending' ? '/movies' : `/movies/${cat.id}`}
+                                    className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sharp border transition-all duration-300 ${
+                                        isActive
+                                            ? 'bg-primary border-primary text-text shadow-lg shadow-primary/20'
+                                            : 'bg-surface hover:bg-themeBorder border-themeBorder text-muted hover:text-text'
+                                    }`}
+                                >
+                                    <IconComponent className="w-3.5 h-3.5" />
+                                    <span>{cat.label}</span>
+                                </Link>
+                            );
+                        })}
+                    </div>
+                }
+                className="border-b border-themeBorder/40 pb-6 mb-8 gap-4 mb-8"
+            />
 
             {/* Hiển thị lỗi kết nối nếu API gặp vấn đề */}
             {error && <ErrorState onRetry={refetch} variant="banner" />}
@@ -163,7 +162,7 @@ export const MoviesPage: React.FC = () => {
                     )}
                 </>
             )}
-        </div>
+        </Container>
     );
 };
 

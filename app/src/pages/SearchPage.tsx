@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Search, ArrowLeft } from "lucide-react";
 import { searchMulti } from "../services/searchApi";
-import { LoadingState, ErrorState, EmptyState, Pagination, SearchFilterTabs, SearchResultsGrid, Button } from "../components";
+import { LoadingState, ErrorState, EmptyState, Pagination, SearchFilterTabs, SearchResultsGrid, Button, Container, SectionHeader } from "../components";
 import type { SearchResult } from "../types/api";
 
 /**
@@ -108,7 +108,7 @@ export const SearchPage: React.FC = () => {
   }, [results]);
 
   return (
-    <div className="container-custom py-10 min-h-[65vh] text-left">
+    <Container py="none" className="py-10 min-h-[65vh] text-left" as="div">
       
       {/* Quay lại Trang chủ */}
       <Link
@@ -121,9 +121,15 @@ export const SearchPage: React.FC = () => {
 
       {/* 1. Header Tìm kiếm */}
       <div className="max-w-2xl mx-auto mb-10 text-center">
-        <h1 className="font-display font-extrabold text-3xl md:text-5xl tracking-tight text-text mb-6">
-          TÌM KIẾM <span className="text-primary">ĐIỆN ẢNH</span>
-        </h1>
+        <SectionHeader
+          title={
+            <>
+              TÌM KIẾM <span className="text-primary">ĐIỆN ẢNH</span>
+            </>
+          }
+          align="center"
+          className="mb-6"
+        />
         
         {/* Hộp tìm kiếm */}
         <form onSubmit={handleSubmit} className="relative group">
@@ -204,7 +210,7 @@ export const SearchPage: React.FC = () => {
           </>
         )}
       </div>
-    </div>
+    </Container>
   );
 };
 

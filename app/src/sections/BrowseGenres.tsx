@@ -4,7 +4,7 @@ import {
   Flame, Heart, Smile, Ghost, Sparkles, Rocket, Compass, Film, Globe, History, Compass as GridIcon
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Container, SectionHeader } from "../components";
+import { Container, SectionHeader, Card } from "../components";
 import { useTrendingMovies } from "../hooks/useMovies";
 import { getNormalizedSampleMovies } from "../hooks/useMovies";
 
@@ -90,7 +90,10 @@ export const BrowseGenres: React.FC = () => {
               className="group relative cursor-pointer"
             >
               <Link to={`/genre/movie/${genre.id}`} className="block">
-                <div className="relative overflow-hidden bg-surface/30 backdrop-blur-md border border-themeBorder/60 p-6 md:p-8 flex flex-col items-center justify-center gap-4 text-center transition-all duration-300 hover:border-primary/50 hover:bg-surface/50 hover:-translate-y-1.5 rounded-sharp">
+                <Card
+                  variant="glass"
+                  className="relative overflow-hidden p-6 md:p-8 flex flex-col items-center justify-center gap-4 text-center transition-all duration-300 hover:border-primary/50 hover:bg-surface/50 hover:-translate-y-1.5"
+                >
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-ember/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
                   <div className="w-14 h-14 bg-background/50 border border-themeBorder flex items-center justify-center text-muted group-hover:text-primary group-hover:border-primary/40 group-hover:scale-110 transition-all duration-300 rounded-sharp">
@@ -107,7 +110,7 @@ export const BrowseGenres: React.FC = () => {
                   </div>
 
                   <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-primary rounded-full scale-0 group-hover:scale-100 transition-transform duration-300 shadow-glow shadow-primary" />
-                </div>
+                </Card>
               </Link>
             </motion.div>
           );

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Search, HelpCircle } from "lucide-react";
+import { Container, SectionHeader, Card } from "../../components";
 
 export const FaqPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,17 +18,20 @@ export const FaqPage: React.FC = () => {
   );
 
   return (
-    <div className="container-custom py-10 text-left max-w-3xl">
+    <Container py="none" className="py-10 text-left max-w-3xl">
       <Link to="/" className="inline-flex items-center gap-1 text-xs text-muted hover:text-gold mb-6 transition-colors">
         <ArrowLeft className="w-3.5 h-3.5" /> Quay lại
       </Link>
 
-      <div className="border-b border-themeBorder/40 pb-6 mb-8">
-        <h1 className="font-display font-extrabold text-3xl md:text-5xl text-text uppercase">
-          Câu Hỏi <span className="text-gold">Thường Gặp</span>
-        </h1>
-        <p className="text-muted text-sm mt-2">Tìm kiếm nhanh câu trả lời cho các câu hỏi phổ biến.</p>
-      </div>
+      <SectionHeader
+        title={
+          <>
+            Câu Hỏi <span className="text-gold">Thường Gặp</span>
+          </>
+        }
+        subtitle="Tìm kiếm nhanh câu trả lời cho các câu hỏi phổ biến."
+        className="border-b border-themeBorder/40 pb-6 mb-8 gap-2"
+      />
 
       {/* Ô tìm kiếm câu hỏi */}
       <div className="relative mb-10">
@@ -44,18 +48,18 @@ export const FaqPage: React.FC = () => {
       <div className="flex flex-col gap-6">
         {filteredFaqs.length > 0 ? (
           filteredFaqs.map((faq, idx) => (
-            <div key={idx} className="p-6 bg-surface/10 border border-themeBorder/40 rounded-sharp">
+            <Card key={idx} variant="glass" className="p-6">
               <h4 className="font-display font-bold text-sm text-gold flex items-start gap-2">
                 <HelpCircle className="w-4 h-4 mt-0.5 shrink-0" />
                 <span>{faq.q}</span>
               </h4>
               <p className="text-xs text-muted mt-3 leading-relaxed pl-6 border-l border-themeBorder/60">{faq.a}</p>
-            </div>
+            </Card>
           ))
         ) : (
           <div className="text-center py-10 text-muted text-xs">Không tìm thấy câu hỏi phù hợp.</div>
         )}
       </div>
-    </div>
+    </Container>
   );
 };

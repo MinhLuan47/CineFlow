@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Trash2, History, Bookmark, ArrowRight } from "lucide-react";
 import { useWatchlist } from "../hooks/useWatchlist";
 import { useWatchHistory } from "../hooks/useWatchHistory";
-import { MediaCard, Button } from "../components";
+import { MediaCard, Button, Container, SectionHeader, Card } from "../components";
 
 /**
  * WatchlistPage - Trang hiển thị Danh sách lưu trữ (Watchlist) và Lịch sử xem phim (History).
@@ -19,36 +19,35 @@ export const WatchlistPage: React.FC = () => {
   const activeList = isWatchlist ? watchlist : history;
 
   return (
-    <div className="container-custom py-10 min-h-[75vh] text-left">
+    <Container py="none" className="py-10 min-h-[75vh] text-left" as="div">
       
       {/* Header trang */}
-      <div className="border-b border-themeBorder/40 pb-6 mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-        <div>
-          <h1 className="font-display font-extrabold text-3xl md:text-5xl tracking-tight text-text">
+      <SectionHeader
+        title={
+          <>
             THƯ VIỆN <span className="text-gold">CÁ NHÂN</span>
-          </h1>
-          <p className="text-muted text-sm mt-2">
-            Quản lý những bộ phim bạn đã lưu và lịch sử xem của mình trên trình duyệt này.
-          </p>
-        </div>
-
-        {/* Nút Xóa tất cả */}
-        {activeList.length > 0 && (
-          <Button
-            onClick={() => {
-              if (window.confirm(isWatchlist ? "Bạn có chắc chắn muốn xóa toàn bộ danh sách lưu trữ?" : "Bạn có chắc chắn muốn xóa toàn bộ lịch sử xem?")) {
-                isWatchlist ? clearWatchlist() : clearHistory();
-              }
-            }}
-            variant="outline"
-            size="sm"
-            className="self-start md:self-auto hover:bg-red-500/10 border-themeBorder hover:border-red-500/30 text-xs font-bold uppercase tracking-wider text-muted hover:text-red-500 shadow-none"
-            icon={<Trash2 className="w-4 h-4" />}
-          >
-            {isWatchlist ? "Xóa toàn bộ tủ phim" : "Xóa lịch sử xem"}
-          </Button>
-        )}
-      </div>
+          </>
+        }
+        description="Quản lý những bộ phim bạn đã lưu và lịch sử xem của mình trên trình duyệt này."
+        action={
+          activeList.length > 0 ? (
+            <Button
+              onClick={() => {
+                if (window.confirm(isWatchlist ? "Bạn có chắc chắn muốn xóa toàn bộ danh sách lưu trữ?" : "Bạn có chắc chắn muốn xóa toàn bộ lịch sử xem?")) {
+                  isWatchlist ? clearWatchlist() : clearHistory();
+                }
+              }}
+              variant="outline"
+              size="sm"
+              className="self-start md:self-auto hover:bg-red-500/10 border-themeBorder hover:border-red-500/30 text-xs font-bold uppercase tracking-wider text-muted hover:text-red-500 shadow-none"
+              icon={<Trash2 className="w-4 h-4" />}
+            >
+              {isWatchlist ? "Xóa toàn bộ tủ phim" : "Xóa lịch sử xem"}
+            </Button>
+          ) : undefined
+        }
+        className="border-b border-themeBorder/40 pb-6 mb-8 gap-4 mb-8"
+      />
 
       {/* Tab Switchers */}
       <div className="flex gap-4 border-b border-themeBorder/20 pb-4 mb-8">
@@ -85,9 +84,10 @@ export const WatchlistPage: React.FC = () => {
       {activeList.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
           {activeList.map((item) => (
-            <div
+            <Card
               key={item.id}
-              className="flex flex-col bg-surface/20 border border-themeBorder/40 hover:border-gold/30 rounded-sharp p-2 transition-all duration-300 group shadow-lg"
+              variant="glass"
+              className="flex flex-col hover:border-gold/30 p-2 transition-all duration-300 group shadow-lg"
             >
               {/* MediaCard Component hiện hành */}
               <div className="flex-1">
@@ -105,12 +105,12 @@ export const WatchlistPage: React.FC = () => {
               >
                 Loại bỏ
               </Button>
-            </div>
+            </Card>
           ))}
         </div>
       ) : (
         /* GIAO DIỆN EMPTY STATE */
-        <div className="py-20 flex flex-col items-center justify-center border border-dashed border-themeBorder/40 rounded-sharp bg-surface/10 text-center max-w-2xl mx-auto my-6 px-6">
+        <Card variant="glass" className="py-20 flex flex-col items-center justify-center border-dashed border-themeBorder/40 bg-surface/10 text-center max-w-2xl mx-auto my-6 px-6">
           <div className="w-16 h-16 bg-surface/60 border border-themeBorder/40 rounded-full flex items-center justify-center mb-5">
             {isWatchlist ? (
               <Bookmark className="w-7 h-7 text-gold" />
@@ -126,16 +126,20 @@ export const WatchlistPage: React.FC = () => {
               ? "Hãy thêm các tác phẩm yêu thích để theo dõi tiện lợi hơn tại đây."
               : "Các bộ phim bạn đã click vào xem trailer sẽ tự động được ghi nhận tại đây."}
           </p>
-          <Link
-            to="/"
-            className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 bg-gold hover:bg-gold-hover text-background text-xs font-black uppercase tracking-wider rounded-sharp transition-all"
-          >
-            <span>Khám phá phim ngay</span>
-            <ArrowRight className="w-4 h-4" />
+          <Link to="/">
+            <Button
+              variant="secondary"
+              className="mt-6 bg-gold hover:bg-gold-hover text-background hover:text-background border-none shadow-none"
+              size="sm"
+              icon={<ArrowRight className="w-4 h-4" />}
+              iconPosition="right"
+            >
+              Khám phá phim ngay
+            </Button>
           </Link>
-        </div>
+        </Card>
       )}
-    </div>
+    </Container>
   );
 };
 

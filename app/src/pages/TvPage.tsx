@@ -8,7 +8,7 @@ import {
   getTopRatedTv
 } from "../services/tvApi";
 import { useTv } from "../hooks/useTv";
-import { MediaCard, LoadingState, ErrorState, EmptyState, Pagination } from "../components";
+import { MediaCard, LoadingState, ErrorState, EmptyState, Pagination, SectionHeader, Container } from "../components";
 import type { NormalizedTvSeries } from "../types/api";
 
 /**
@@ -73,42 +73,41 @@ export const TvPage: React.FC = () => {
   const totalPages = meta?.totalPages || 1;
 
   return (
-    <div className="container-custom py-10 min-h-[60vh] text-left">
+    <Container py="none" className="py-10 min-h-[60vh] text-left" as="div">
       {/* Tiêu đề trang & Danh mục Tabs */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-themeBorder/40 pb-6 mb-8 gap-4">
-        <div>
-          <div className="flex items-center gap-2 text-gold font-bold text-xs uppercase tracking-widest mb-2">
-            <Tv className="w-4 h-4 text-gold" />
-            <span>Phim Bộ / {currentCat.label}</span>
-          </div>
-          <h1 className="font-display font-extrabold text-3xl md:text-5xl tracking-tight text-text">
+      <SectionHeader
+        accentIcon={<Tv className="w-4 h-4 text-gold" />}
+        accentText={`Phim Bộ / ${currentCat.label}`}
+        title={
+          <>
             PHIM <span className="text-gold">TRUYỀN HÌNH</span>
-          </h1>
-          <p className="text-muted text-sm mt-2 max-w-2xl">{currentCat.desc}</p>
-        </div>
-
-        {/* Danh sách tab danh mục */}
-        <div className="flex flex-wrap gap-2">
-          {categories.map((cat) => {
-            const IconComponent = cat.icon;
-            const isActive = cat.id === activeCategory;
-            return (
-              <Link
-                key={cat.id}
-                to={cat.id === "trending" ? "/tv" : `/tv/${cat.id}`}
-                className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sharp border transition-all duration-300 ${
-                  isActive
-                    ? "bg-gold text-background border-gold shadow-lg shadow-gold/25"
-                    : "bg-surface border-themeBorder text-muted hover:border-gold/40 hover:text-text"
-                }`}
-              >
-                <IconComponent className="w-3.5 h-3.5" />
-                <span>{cat.label}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
+          </>
+        }
+        description={currentCat.desc}
+        action={
+          <div className="flex flex-wrap gap-2">
+            {categories.map((cat) => {
+              const IconComponent = cat.icon;
+              const isActive = cat.id === activeCategory;
+              return (
+                <Link
+                  key={cat.id}
+                  to={cat.id === "trending" ? "/tv" : `/tv/${cat.id}`}
+                  className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sharp border transition-all duration-300 ${
+                    isActive
+                      ? "bg-gold text-background border-gold shadow-lg shadow-gold/25"
+                      : "bg-surface border-themeBorder text-muted hover:border-gold/40 hover:text-text"
+                  }`}
+                >
+                  <IconComponent className="w-3.5 h-3.5" />
+                  <span>{cat.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+        }
+        className="border-b border-themeBorder/40 pb-6 mb-8 gap-4 mb-8"
+      />
 
       {/* Hiển thị lỗi kết nối nếu API gặp vấn đề */}
       {error && (
@@ -152,7 +151,7 @@ export const TvPage: React.FC = () => {
           )}
         </>
       )}
-    </div>
+    </Container>
   );
 };
 

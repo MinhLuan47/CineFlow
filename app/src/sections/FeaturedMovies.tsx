@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, Clapperboard } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { MovieCard, Button, SectionHeader, Container, LoadingState, ErrorState, EmptyState } from '../components';
 import { useTrendingMovies } from '../hooks/useMovies';
 import { mapNormalizedToMovie } from '../utils/movieMapper';
@@ -147,16 +148,18 @@ export const FeaturedMovies: React.FC = () => {
 
             {/* Nút xem tất cả phim */}
             <div className="flex justify-center mt-14 md:mt-18">
-                <Button
-                    variant="outline"
-                    icon={
-                        <ChevronRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
-                    }
-                    iconPosition="right"
-                    className="group"
-                >
-                    Xem tất cả phim
-                </Button>
+                <Link to="/movies">
+                    <Button
+                        variant="outline"
+                        icon={
+                            <ChevronRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
+                        }
+                        iconPosition="right"
+                        className="group"
+                    >
+                        Xem tất cả phim
+                    </Button>
+                </Link>
             </div>
         </Container>
     );

@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Play, Sparkles, Film } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Container, Button } from "../components";
+import { Container, Button, Card } from "../components";
 import { fallbackMovies } from "../data/movies";
 
 /**
@@ -21,7 +21,7 @@ export const FinalCTA: React.FC = () => {
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] rounded-full bg-primary/5 blur-[150px] pointer-events-none" />
       <div className="absolute right-[-10%] top-[-10%] w-[30%] h-[60%] rounded-full bg-ember/5 blur-[100px] pointer-events-none" />
 
-      <div className="relative border border-themeBorder bg-surface/40 p-8 md:p-16 overflow-hidden rounded-sharp">
+      <Card variant="glass" className="relative p-8 md:p-16 overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
           
           {/* Cột trái: Nội dung & CTA */}
@@ -124,7 +124,7 @@ export const FinalCTA: React.FC = () => {
           </div>
 
         </div>
-      </div>
+      </Card>
     </Container>
   );
 };

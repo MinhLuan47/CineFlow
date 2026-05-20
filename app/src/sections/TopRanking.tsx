@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Star, Play, Eye, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Container, SectionHeader, Button, LoadingState, ErrorState } from "../components";
+import { Container, SectionHeader, Button, LoadingState, ErrorState, Card } from "../components";
 import { usePopularMovies } from "../hooks/useMovies";
 import type { NormalizedMovie } from "../types/api";
 
@@ -90,59 +90,62 @@ export const TopRanking: React.FC = () => {
       <motion.div key={movie.id} variants={itemVariants}>
         <Link
           to={`/movie/${movie.id}`}
-          className={`group flex items-center gap-4 bg-surface/30 border border-themeBorder hover:border-primary/50 p-3 transition-all duration-300 rounded-sharp ${glowShadowClass} ${
-            isTop3 ? "bg-surface/50 border-themeBorder/80" : ""
-          }`}
+          className="group block"
         >
-          {/* Số thứ tự xếp hạng */}
-          <div className="w-12 md:w-16 flex-shrink-0 text-center select-none">
-            <span className={`font-display text-4xl md:text-5xl tracking-tight transition-colors duration-300 ${rankColorClass}`}>
-              {rank.toString().padStart(2, "0")}
-            </span>
-          </div>
+          <Card
+            variant={isTop3 ? "glass" : "default"}
+            className={`flex items-center gap-4 p-3 transition-all duration-300 ${glowShadowClass} hover:border-primary/50 bg-surface/30`}
+          >
+            {/* Số thứ tự xếp hạng */}
+            <div className="w-12 md:w-16 flex-shrink-0 text-center select-none">
+              <span className={`font-display text-4xl md:text-5xl tracking-tight transition-colors duration-300 ${rankColorClass}`}>
+                {rank.toString().padStart(2, "0")}
+              </span>
+            </div>
 
-          {/* Ảnh thu nhỏ Poster */}
-          <div className="relative w-14 h-20 bg-card border border-themeBorder overflow-hidden flex-shrink-0 rounded-sharp">
-            <img
-              src={movie.poster}
-              alt={movie.title}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-          </div>
+            {/* Ảnh thu nhỏ Poster */}
+            <div className="relative w-14 h-20 bg-card border border-themeBorder overflow-hidden flex-shrink-0 rounded-sharp">
+              <img
+                src={movie.poster}
+                alt={movie.title}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+            </div>
 
-          {/* Thông tin phim */}
-          <div className="flex-grow min-w-0 flex flex-col gap-1">
-            <h3 className="font-bold text-sm md:text-base text-text truncate group-hover:text-primary transition-colors">
-              {movie.title}
-            </h3>
-            <p className="text-[10px] md:text-xs text-muted truncate">
-              {movie.originalTitle} • {movie.genre.slice(0, 2).join(", ")}
-            </p>
+            {/* Thông tin phim */}
+            <div className="flex-grow min-w-0 flex flex-col gap-1">
+              <h3 className="font-bold text-sm md:text-base text-text truncate group-hover:text-primary transition-colors">
+                {movie.title}
+              </h3>
+              <p className="text-[10px] md:text-xs text-muted truncate">
+                {movie.originalTitle} • {movie.genre.slice(0, 2).join(", ")}
+              </p>
 
-            <div className="flex items-center gap-3 mt-0.5">
-              <div className="flex items-center gap-1 text-gold text-[10px] md:text-xs font-bold">
-                <Star className="w-3.5 h-3.5 fill-current" />
-                <span>{movie.rating}</span>
-              </div>
-              
-              <div className="flex items-center gap-1 text-muted/80 text-[10px] md:text-xs font-medium">
-                <Eye className="w-3.5 h-3.5" />
-                <span>{formatViews(movie.views)} lượt xem</span>
+              <div className="flex items-center gap-3 mt-0.5">
+                <div className="flex items-center gap-1 text-gold text-[10px] md:text-xs font-bold">
+                  <Star className="w-3.5 h-3.5 fill-current" />
+                  <span>{movie.rating}</span>
+                </div>
+                
+                <div className="flex items-center gap-1 text-muted/80 text-[10px] md:text-xs font-medium">
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>{formatViews(movie.views)} lượt xem</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Nút xem nhanh */}
-          <div className="flex-shrink-0 pr-1">
-            <Button
-              variant="icon"
-              className="group-hover:bg-primary group-hover:border-primary group-hover:text-text transition-colors duration-300"
-            >
-              <Play className="w-4 h-4 fill-current ml-0.5" />
-            </Button>
-          </div>
+            {/* Nút xem nhanh */}
+            <div className="flex-shrink-0 pr-1">
+              <Button
+                variant="icon"
+                className="group-hover:bg-primary group-hover:border-primary group-hover:text-text transition-colors duration-300"
+              >
+                <Play className="w-4 h-4 fill-current ml-0.5" />
+              </Button>
+            </div>
+          </Card>
         </Link>
       </motion.div>
     );

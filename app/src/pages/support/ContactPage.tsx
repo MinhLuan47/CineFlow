@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Send, Sparkles, Mail, Phone, MapPin } from "lucide-react";
-import { Button } from "../../components";
+import { Button, Container, SectionHeader, Card } from "../../components";
 
 export const ContactPage: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -15,27 +15,30 @@ export const ContactPage: React.FC = () => {
   };
 
   return (
-    <div className="container-custom py-10 text-left max-w-4xl">
+    <Container py="none" className="py-10 text-left max-w-4xl">
       <Link to="/" className="inline-flex items-center gap-1 text-xs text-muted hover:text-gold mb-6 transition-colors">
         <ArrowLeft className="w-3.5 h-3.5" /> Quay lại
       </Link>
 
-      <div className="border-b border-themeBorder/40 pb-6 mb-8">
-        <h1 className="font-display font-extrabold text-3xl md:text-5xl text-text uppercase">
-          Liên Hệ <span className="text-gold">Hợp Tác</span>
-        </h1>
-        <p className="text-muted text-sm mt-2">Hợp tác quảng cáo, bảo trợ truyền thông hoặc giải đáp kỹ thuật.</p>
-      </div>
+      <SectionHeader
+        title={
+          <>
+            Liên Hệ <span className="text-gold">Hợp Tác</span>
+          </>
+        }
+        subtitle="Hợp tác quảng cáo, bảo trợ truyền thông hoặc giải đáp kỹ thuật."
+        className="border-b border-themeBorder/40 pb-6 mb-8 gap-2"
+      />
 
       <div className="grid md:grid-cols-2 gap-10">
         {/* Form liên hệ */}
         <div>
           {submitted ? (
-            <div className="p-8 bg-surface/20 border border-gold/20 rounded-sharp text-center">
+            <Card variant="glass" className="p-8 text-center">
               <Sparkles className="w-10 h-10 text-gold mx-auto mb-4" />
               <h3 className="font-display font-bold text-lg text-text">Gửi liên hệ thành công!</h3>
               <p className="text-xs text-muted mt-2">Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi sớm nhất có thể.</p>
-            </div>
+            </Card>
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
@@ -122,6 +125,6 @@ export const ContactPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Container>
   );
 };

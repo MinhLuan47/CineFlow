@@ -8,7 +8,7 @@ import {
   useMovieRecommendations,
   useSimilarMovies
 } from "../hooks/useMovieDetail";
-import { MovieCard, LoadingState, ErrorState, CastGrid, TrailerModal, Button, Badge } from "../components";
+import { MovieCard, LoadingState, ErrorState, CastGrid, TrailerModal, Button, Badge, Container } from "../components";
 import { useWatchlist } from "../hooks/useWatchlist";
 import { mapNormalizedToMovie } from "../utils/movieMapper";
 
@@ -75,7 +75,7 @@ export const MovieDetailPage: React.FC = () => {
 
   if (detailError || !movie) {
     return (
-      <div className="container-custom py-24 min-h-[70vh] flex flex-col items-center justify-center">
+      <Container py="none" className="py-24 min-h-[70vh] flex flex-col items-center justify-center">
         <ErrorState
           variant="blocking"
           message={`Không thể tìm thấy thông tin chi tiết cho bộ phim với mã số: #${movieId}. Vui lòng thử lại sau hoặc quay lại Trang chủ.`}
@@ -87,7 +87,7 @@ export const MovieDetailPage: React.FC = () => {
         >
           Quay lại Trang Chủ
         </Link>
-      </div>
+      </Container>
     );
   }
 
@@ -122,7 +122,7 @@ export const MovieDetailPage: React.FC = () => {
       </div>
 
       {/* 2. Khối thông tin trung tâm đè lên Backdrop */}
-      <div className="container-custom relative z-20 -mt-40 md:-mt-64 px-4 md:px-8">
+      <Container py="none" className="relative z-20 -mt-40 md:-mt-64 px-4 md:px-8">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
           
           {/* A. Poster của phim */}
@@ -138,114 +138,103 @@ export const MovieDetailPage: React.FC = () => {
               className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center cursor-pointer"
             >
               <div className="w-14 h-14 bg-primary rounded-full flex items-center justify-center shadow-lg transform scale-90 group-hover:scale-100 transition-transform duration-300 shadow-primary/35">
-                <Play className="w-6 h-6 text-text fill-current ml-1" />
+                <Play className="w-6 h-6 text-text fill-text ml-0.5" />
               </div>
             </div>
           </div>
 
-          {/* B. Toàn bộ thông tin văn bản */}
-          <div className="flex-1 text-center lg:text-left lg:pt-16">
-            {/* Gắn thẻ chất lượng và nhãn phụ đề */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 mb-4">
-              <span className="bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-sharp">
-                {movie.quality}
-              </span>
-              {movie.subtitleLanguages.map((sub, idx) => (
-                <span key={idx} className="bg-surface border border-themeBorder text-muted text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-sharp">
-                  {sub}
-                </span>
-              ))}
+          {/* B. Thông tin chi tiết */}
+          <div className="flex-1 text-center lg:text-left">
+            
+            {/* Hàng nhỏ trên cùng */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mb-4">
+              <Badge variant="gold" size="sm">
+                Độc Quyền
+              </Badge>
+              {movie.releaseDate && (
+                <div className="flex items-center gap-1.5 text-xs text-muted font-bold">
+                  <Calendar className="w-4 h-4 text-primary" />
+                  <span>{new Date(movie.releaseDate).getFullYear()}</span>
+                </div>
+              )}
+              {formattedRuntime && (
+                <div className="flex items-center gap-1.5 text-xs text-muted font-bold">
+                  <Clock className="w-4 h-4" />
+                  <span>{formattedRuntime}</span>
+                </div>
+              )}
             </div>
 
-            {/* Tiêu đề chính & Tiêu đề gốc */}
-            <h1 className="font-display font-extrabold text-3xl md:text-5xl lg:text-6xl tracking-tight text-text leading-none">
+            {/* Tiêu đề & Tagline */}
+            <h1 className="font-display font-extrabold text-3xl md:text-5xl lg:text-6xl tracking-tight text-text mb-4 uppercase leading-[1.1]">
               {movie.title}
             </h1>
-            <h2 className="text-sm md:text-lg text-muted font-medium mt-2 italic">
-              {movie.originalTitle} {movie.year ? `(${movie.year})` : ""}
-            </h2>
+            {movie.tagline && (
+              <p className="text-sm md:text-base text-gold font-medium italic mb-6 leading-relaxed">
+                "{movie.tagline}"
+              </p>
+            )}
 
-            {/* Các thẻ thông số (Rating, Year, Duration) */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mt-6 text-xs text-muted font-bold">
-              {/* Điểm IMDb */}
-              <div className="flex items-center gap-1 bg-gold/10 border border-gold/20 text-gold px-2.5 py-1 rounded-sharp">
-                <Star className="w-3.5 h-3.5 fill-current" />
-                <span>{movie.voteAverage.toFixed(1)} IMDb</span>
+            {/* Điểm số đánh giá & Thể loại */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mb-8">
+              <div className="flex items-center gap-1.5 bg-surface border border-themeBorder px-3 py-1.5 rounded-sharp">
+                <Star className="w-4 h-4 text-gold fill-gold" />
+                <span className="text-sm font-black text-text">{movie.voteAverage?.toFixed(1) || "0.0"}</span>
+                <span className="text-xs text-muted font-semibold">/10</span>
               </div>
               
-              {/* Số lượt đánh giá */}
-              <span className="text-muted/60">{movie.voteCount.toLocaleString()} lượt vote</span>
-              <span>•</span>
-
-              {/* Năm phát hành */}
-              <div className="flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5 text-primary" />
-                <span>{movie.releaseDate || "Chưa rõ"}</span>
-              </div>
-              <span>•</span>
-
-              {/* Thời lượng */}
-              <div className="flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-primary" />
-                <span>{formattedRuntime}</span>
+              <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
+                {movie.genres?.map((genre, index) => (
+                  <Badge key={index} variant="glass" size="sm">
+                    {genre}
+                  </Badge>
+                ))}
               </div>
             </div>
 
-            {/* Thể loại phim */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mt-4">
-              {movie.genres.map((genreName, idx) => (
-                <Badge
-                  key={idx}
-                  variant="outline"
-                  size="sm"
-                  className="text-xs font-bold bg-surface/50 border border-themeBorder/60 px-3 py-1 text-text hover:border-primary/45 transition-colors cursor-default"
-                >
-                  {genreName}
-                </Badge>
-              ))}
-            </div>
-
-            {/* Tóm tắt cốt truyện */}
-            <div className="mt-8">
-              <h3 className="text-xs font-black uppercase tracking-wider text-primary mb-2">Tóm tắt nội dung</h3>
-              <p className="text-sm md:text-base text-muted leading-relaxed max-w-3xl font-medium">
-                {movie.overview || "Nội dung tóm tắt của bộ phim này hiện đang được cập nhật..."}
+            {/* Nội dung tóm tắt (Overview) */}
+            <div className="mb-8 max-w-3xl">
+              <h3 className="font-display font-bold text-xs uppercase tracking-widest text-text mb-3">Tóm tắt nội dung</h3>
+              <p className="text-xs md:text-sm text-muted leading-relaxed text-justify">
+                {movie.overview || "Hiện tại chưa có tóm tắt chi tiết cho bộ phim này. Vui lòng quay lại sau."}
               </p>
             </div>
 
-            {/* Các nút hành động chính */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mt-8">
-              {/* Nút Xem Phim */}
-              <Link
-                to={`/watch/movie/${movie.id}`}
-                className="flex items-center gap-2 px-7 py-3.5 bg-primary hover:bg-primary/90 text-text text-xs font-black uppercase tracking-wider rounded-sharp shadow-xl shadow-primary/20 transition-all duration-300 hover:scale-[1.02]"
-              >
-                <Play className="w-4 h-4 fill-current" />
-                <span>Xem Ngay</span>
+            {/* Cột các Nút hành động */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
+              <Link to={`/watch/movie/${movie.id}`}>
+                <Button
+                  variant="primary"
+                  size="lg"
+                  className="px-8 bg-primary hover:bg-primary-hover text-text border-none shadow-xl shadow-primary/10"
+                  icon={<Play className="w-4 h-4 fill-current" />}
+                >
+                  Xem Ngay
+                </Button>
               </Link>
               
-              {/* Nút Xem Trailer */}
-              <Button
-                onClick={handleOpenTrailer}
-                variant="secondary"
-                size="md"
-                className="px-5 py-3.5 bg-surface hover:bg-themeBorder border border-themeBorder text-xs font-black uppercase tracking-wider"
-                icon={<Film className="w-4 h-4 text-gold" />}
-              >
-                Xem Trailer
-              </Button>
+              {trailerVideo && (
+                <Button
+                  onClick={handleOpenTrailer}
+                  variant="outline"
+                  size="lg"
+                  className="px-6 border-themeBorder text-muted hover:text-text hover:bg-surface/50"
+                  icon={<Film className="w-4 h-4" />}
+                >
+                  Trailer
+                </Button>
+              )}
 
-              {/* Nút thêm vào danh sách phát (Watchlist) */}
               <Button
                 onClick={handleToggleWatchlist}
-                variant={isInWatchlist ? "outline" : "secondary"}
-                size="md"
-                className={`px-5 py-3.5 border text-xs font-black uppercase tracking-wider ${
+                variant={isInWatchlist ? "secondary" : "outline"}
+                size="lg"
+                className={`px-5 ${
                   isInWatchlist
-                    ? "bg-emerald-950/20 border-emerald-500/30 text-emerald-400 hover:bg-emerald-950/40 hover:text-emerald-300"
-                    : "bg-surface hover:bg-themeBorder border-themeBorder text-text"
+                    ? "bg-gold/10 hover:bg-gold/15 border-gold/30 text-gold"
+                    : "border-themeBorder text-muted hover:text-text hover:bg-surface/50"
                 }`}
-                icon={isInWatchlist ? <Check className="w-4 h-4 text-emerald-400" /> : <Heart className="w-4 h-4 text-primary" />}
+                icon={isInWatchlist ? <Check className="w-4 h-4" /> : <Heart className="w-4 h-4" />}
               >
                 {isInWatchlist ? "Đã thích" : "Yêu Thích"}
               </Button>
@@ -302,7 +291,7 @@ export const MovieDetailPage: React.FC = () => {
           )}
         </div>
 
-      </div>
+      </Container>
 
       {/* 3. Modal xem Trailer Youtube */}
       <TrailerModal
@@ -325,7 +314,7 @@ const MovieDetailSkeleton: React.FC = () => {
       <div className="relative w-full h-[50vh] bg-surface/30" />
       
       {/* Content Skeleton */}
-      <div className="container-custom relative z-20 -mt-36 px-8 flex flex-col lg:flex-row gap-12">
+      <Container py="none" className="relative z-20 -mt-36 px-8 flex flex-col lg:flex-row gap-12">
         {/* Poster Skeleton */}
         <div className="w-52 md:w-72 aspect-[2/3] bg-surface border border-themeBorder/40 rounded-sharp flex-shrink-0" />
         
@@ -345,7 +334,7 @@ const MovieDetailSkeleton: React.FC = () => {
             <div className="h-10 bg-surface w-28 rounded" />
           </div>
         </div>
-      </div>
+      </Container>
     </div>
   );
 };

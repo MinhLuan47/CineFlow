@@ -1,20 +1,24 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, FileText } from "lucide-react";
+import { Container, SectionHeader } from "../../components";
 
 export const TermsPage: React.FC = () => {
   return (
-    <div className="container-custom py-10 text-left max-w-3xl">
+    <Container py="none" className="py-10 text-left max-w-3xl">
       <Link to="/" className="inline-flex items-center gap-1 text-xs text-muted hover:text-gold mb-6 transition-colors">
         <ArrowLeft className="w-3.5 h-3.5" /> Quay lại
       </Link>
 
-      <div className="border-b border-themeBorder/40 pb-6 mb-8">
-        <h1 className="font-display font-extrabold text-3xl md:text-5xl text-text uppercase">
-          Điều Khoản <span className="text-gold">Sử Dụng</span>
-        </h1>
-        <p className="text-muted text-sm mt-2">Cập nhật lần cuối: Tháng 5 năm 2026.</p>
-      </div>
+      <SectionHeader
+        title={
+          <>
+            Điều Khoản <span className="text-gold">Sử Dụng</span>
+          </>
+        }
+        subtitle="Cập nhật lần cuối: Tháng 5 năm 2026."
+        className="border-b border-themeBorder/40 pb-6 mb-8 gap-2"
+      />
 
       <div className="prose prose-invert text-xs text-muted leading-relaxed space-y-6">
         <section>
@@ -38,6 +42,6 @@ export const TermsPage: React.FC = () => {
           <p>CineFlow chỉ cung cấp thông tin và trình phát trailer phim công cộng. Chúng tôi không lưu trữ, phát trực tiếp các bộ phim có bản quyền một cách bất hợp pháp. Các liên kết video được dẫn từ máy chủ Youtube công khai.</p>
         </section>
       </div>
-    </div>
+    </Container>
   );
 };
