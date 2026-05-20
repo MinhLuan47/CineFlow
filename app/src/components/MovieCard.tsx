@@ -1,6 +1,7 @@
 import React from "react";
 import { Play, Star, Eye } from "lucide-react";
 import type { Movie } from "../types/movie";
+import { Badge } from "./ui";
 
 interface MovieCardProps {
   movie?: Movie;
@@ -69,20 +70,32 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, loading = false }) 
           Huy hiệu điểm đánh giá (Rating Badge) - Góc trái phía trên
           Thiết kế kính mờ Glassmorphism.
         */}
-        <div className="absolute top-2.5 left-2.5 bg-background/80 backdrop-blur-md border border-themeBorder/60 px-2 py-0.5 text-[10px] font-black text-gold flex items-center gap-1 rounded-sharp">
+        <Badge
+          variant="gold"
+          size="sm"
+          className="absolute top-2.5 left-2.5 bg-background/80 backdrop-blur-md border-themeBorder/60 px-2 text-[10px] font-black flex items-center gap-1"
+        >
           <Star className="w-3 h-3 fill-current" />
           <span>{movie.rating.toFixed(1)}</span>
-        </div>
+        </Badge>
 
-        {/* Huy hiệu Chất lượng (Quality Badge) - Góc phải phía trên */}
-        <div className="absolute top-2.5 right-2.5 bg-primary/95 text-text font-black text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-sharp">
+        {/* Huy hiệu Chất lượng (Quality Badge) - Góc right phía trên */}
+        <Badge
+          variant="primary"
+          size="sm"
+          className="absolute top-2.5 right-2.5 bg-primary/95 text-text font-black text-[9px] uppercase tracking-wider px-2"
+        >
           {movie.quality}
-        </div>
+        </Badge>
 
         {/* Huy hiệu Phụ đề - Góc trái phía dưới */}
-        <div className="absolute bottom-2.5 left-2.5 bg-black/75 backdrop-blur-md border border-themeBorder/40 text-text/90 text-[10px] font-bold px-2 py-0.5 rounded-sharp">
+        <Badge
+          variant="outline"
+          size="sm"
+          className="absolute bottom-2.5 left-2.5 bg-black/75 backdrop-blur-md border border-themeBorder/40 text-text/90 text-[10px]"
+        >
           {movie.subtitle}
-        </div>
+        </Badge>
 
         {/* Số lượt xem - Góc phải phía dưới */}
         <div className="absolute bottom-2.5 right-2.5 bg-black/60 backdrop-blur-sm text-muted text-[10px] flex items-center gap-1 px-1.5 py-0.5 rounded-sharp">

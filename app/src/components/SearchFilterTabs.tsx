@@ -1,5 +1,6 @@
 import React from "react";
 import { Search, Film, Tv, Users } from "lucide-react";
+import { Button, Badge } from "./ui";
 
 interface SearchFilterTabsProps {
   filter: "all" | "movie" | "tv" | "person";
@@ -16,7 +17,7 @@ export const SearchFilterTabs: React.FC<SearchFilterTabsProps> = ({
   filter,
   setFilter,
   counts,
-}) => {
+ }) => {
   const tabs = [
     { id: "all" as const, label: "Tất cả", icon: Search, count: counts.all },
     { id: "movie" as const, label: "Phim lẻ", icon: Film, count: counts.movie },
@@ -30,25 +31,25 @@ export const SearchFilterTabs: React.FC<SearchFilterTabsProps> = ({
         const Icon = tab.icon;
         const isActive = filter === tab.id;
         return (
-          <button
+          <Button
             key={tab.id}
             onClick={() => setFilter(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sharp border transition-all duration-300 ${
-              isActive
-                ? "bg-primary text-text border-primary shadow-lg shadow-primary/25"
-                : "bg-surface border-themeBorder text-muted hover:border-primary/40 hover:text-text"
-            }`}
+            variant={isActive ? "primary" : "secondary"}
+            size="sm"
+            className={isActive ? "shadow-lg shadow-primary/25 border-primary" : "border-themeBorder text-muted hover:border-primary/40 hover:text-text bg-surface"}
+            icon={<Icon className="w-3.5 h-3.5" />}
           >
-            <Icon className="w-3.5 h-3.5" />
             <span>{tab.label}</span>
-            <span
-              className={`text-[10px] px-1.5 py-0.5 rounded-full font-black ${
+            <Badge
+              variant={isActive ? "glass" : "muted"}
+              size="sm"
+              className={`text-[10px] px-1.5 py-0.5 font-black border-none ${
                 isActive ? "bg-black/40 text-text" : "bg-themeBorder text-muted"
               }`}
             >
               {tab.count}
-            </span>
-          </button>
+            </Badge>
+          </Button>
         );
       })}
     </div>

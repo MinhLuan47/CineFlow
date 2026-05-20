@@ -1,5 +1,6 @@
 import React from "react";
 import { Tv } from "lucide-react";
+import { Button } from "./ui";
 
 interface WatchEpisodeSelectorProps {
   numberOfEpisodes: number;
@@ -26,17 +27,19 @@ export const WatchEpisodeSelector: React.FC<WatchEpisodeSelectorProps> = ({
           const epNum = idx + 1;
           const isActive = activeEpisode === epNum;
           return (
-            <button
+            <Button
               key={idx}
               onClick={() => onEpisodeChange(epNum)}
+              variant={isActive ? "primary" : "outline"}
+              size="sm"
               className={`h-9 text-xs font-bold rounded-sharp border transition-all ${
                 isActive
-                  ? "bg-gold border-gold text-background shadow-lg shadow-gold/15"
+                  ? "bg-gold border-gold text-background shadow-lg shadow-gold/15 hover:bg-gold/90"
                   : "bg-background border-themeBorder text-text hover:border-gold/60"
               }`}
             >
               Tập {epNum}
-            </button>
+            </Button>
           );
         })}
       </div>

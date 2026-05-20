@@ -1,5 +1,6 @@
 import React from "react";
 import { Star, Calendar, Clock, AlertCircle } from "lucide-react";
+import { Badge } from "./ui";
 
 interface WatchMediaInfoProps {
   activeItem: any;
@@ -17,15 +18,13 @@ export const WatchMediaInfo: React.FC<WatchMediaInfoProps> = ({
   return (
     <div className="mt-6">
       <div className="flex items-center gap-2">
-        <span
-          className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-sharp ${
-            isTv
-              ? "bg-gold/10 border border-gold/20 text-gold"
-              : "bg-primary/10 border border-primary/20 text-primary"
-          }`}
+        <Badge
+          variant={isTv ? "gold" : "primary"}
+          size="sm"
+          className="text-[10px] font-black"
         >
           {typeLabel}
-        </span>
+        </Badge>
         <span className="text-xs text-muted">ID: #{activeItem.id}</span>
       </div>
 
@@ -38,13 +37,17 @@ export const WatchMediaInfo: React.FC<WatchMediaInfoProps> = ({
       </h2>
 
       <div className="flex flex-wrap items-center gap-y-2 gap-x-4 md:gap-x-6 mt-5 text-xs text-muted border-b border-themeBorder/20 pb-6 font-bold">
-        <div className="flex items-center gap-1 text-gold bg-gold/15 border border-gold/20 px-2 py-0.5 rounded-sharp">
-          <Star className="w-3.5 h-3.5 fill-current" />
-          <span className="text-text">
+        <Badge
+          variant="gold"
+          size="sm"
+          className="flex items-center gap-1 text-text border border-gold/20"
+        >
+          <Star className="w-3.5 h-3.5 fill-current text-gold" />
+          <span>
             {activeItem.voteAverage ? activeItem.voteAverage.toFixed(1) : "0.0"}{" "}
             IMDb
           </span>
-        </div>
+        </Badge>
         <span className="text-muted/50">•</span>
 
         <div className="flex items-center gap-1">
@@ -62,12 +65,14 @@ export const WatchMediaInfo: React.FC<WatchMediaInfoProps> = ({
       {/* Thể loại */}
       <div className="flex flex-wrap items-center gap-2 mt-4">
         {activeItem.genres.map((genreName: string, idx: number) => (
-          <span
+          <Badge
             key={idx}
-            className="text-[11px] font-bold bg-surface border border-themeBorder/60 px-2.5 py-0.5 rounded-sharp text-text"
+            variant="outline"
+            size="sm"
+            className="text-[11px] font-bold bg-surface border border-themeBorder/60 px-2.5 text-text"
           >
             {genreName}
-          </span>
+          </Badge>
         ))}
       </div>
 

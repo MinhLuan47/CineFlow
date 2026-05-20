@@ -1,5 +1,6 @@
 import React from "react";
 import { Play, Pause, Tv } from "lucide-react";
+import { Badge } from "./ui";
 
 export interface Episode {
   id: number;
@@ -34,9 +35,9 @@ export const EpisodeList: React.FC<EpisodeListProps> = ({
           <Tv className="w-4 h-4 text-primary" />
           <span>Danh Sách Tập Phim</span>
         </div>
-        <span className="text-[10px] bg-themeBorder text-muted px-2 py-0.5 rounded-sharp font-bold">
+        <Badge variant="muted" size="sm" className="text-[10px] font-bold">
           {episodes.length} Tập
-        </span>
+        </Badge>
       </div>
 
       {/* Danh sách cuộn chứa các tập phim */}

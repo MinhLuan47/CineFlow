@@ -152,12 +152,14 @@ export const Hero: React.FC = () => {
                                 Chức năng trình chiếu video thực tế sẽ được tích hợp trong giai đoạn tích hợp trình
                                 phát.
                             </p>
-                            <button
+                            <Button
                                 onClick={() => setIsPlaying(false)}
-                                className="mt-4 px-6 py-2.5 border border-primary bg-primary/15 hover:bg-primary/25 text-primary text-xs font-black uppercase tracking-widest transition-colors rounded-sharp"
+                                variant="danger"
+                                size="sm"
+                                className="mt-4 bg-primary/15 hover:bg-primary/25 text-primary border border-primary/30 hover:border-primary/50 text-xs font-black uppercase tracking-widest shadow-none"
                             >
                                 Đóng phát thử
-                            </button>
+                            </Button>
                         </div>
                     </motion.div>
                 )}

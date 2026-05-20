@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Search, X, Star, Loader2 } from "lucide-react";
 import { useSearch } from "../hooks/useSearch";
 import type { NormalizedMovie, NormalizedTvSeries } from "../types/api";
+import { Badge } from "./ui";
 
 interface GlobalSearchProps {
   variant: "desktop" | "mobile";
@@ -263,17 +264,13 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
                       <span>{rating.toFixed(1)}</span>
                     </div>
                   )}
-                  <span
-                    className={`text-[8px] font-black uppercase tracking-wider px-1 py-0.5 rounded-sharp ${
-                      isMovie
-                        ? "bg-primary/20 text-primary border border-primary/20"
-                        : isTv
-                        ? "bg-gold/20 text-gold border border-gold/20"
-                        : "bg-surface border border-themeBorder/40 text-muted"
-                    }`}
+                  <Badge
+                    variant={isMovie ? "primary" : isTv ? "gold" : "muted"}
+                    size="sm"
+                    className="text-[8px]"
                   >
                     {isMovie ? "Phim lẻ" : isTv ? "Phim bộ" : "Diễn viên"}
-                  </span>
+                  </Badge>
                 </div>
               </Link>
             );

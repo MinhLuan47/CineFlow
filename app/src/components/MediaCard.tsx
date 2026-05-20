@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Play, Star } from "lucide-react";
 import type { NormalizedMovie, NormalizedTvSeries } from "../types/api";
+import { Badge } from "./ui";
 
 interface MediaCardProps {
   item?: NormalizedMovie | NormalizedTvSeries;
@@ -80,25 +81,41 @@ export const MediaCard: React.FC<MediaCardProps> = ({ item, loading = false }) =
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 opacity-70" />
 
         {/* Huy hiệu điểm đánh giá (Rating Badge) - Góc trái phía trên */}
-        <div className="absolute top-2.5 left-2.5 bg-background/80 backdrop-blur-md border border-themeBorder/60 px-2 py-0.5 text-[10px] font-black text-gold flex items-center gap-1 rounded-sharp">
+        <Badge
+          variant="gold"
+          size="sm"
+          className="absolute top-2.5 left-2.5 bg-background/80 backdrop-blur-md border-themeBorder/60 px-2 text-[10px] font-black flex items-center gap-1"
+        >
           <Star className="w-3 h-3 fill-current" />
           <span>{voteAverage ? voteAverage.toFixed(1) : "0.0"}</span>
-        </div>
+        </Badge>
 
-        {/* Huy hiệu Chất lượng (Quality Badge) - Góc phải phía trên */}
-        <div className="absolute top-2.5 right-2.5 bg-primary/95 text-text font-black text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-sharp">
+        {/* Huy hiệu Chất lượng (Quality Badge) - Góc right phía trên */}
+        <Badge
+          variant="primary"
+          size="sm"
+          className="absolute top-2.5 right-2.5 bg-primary/95 text-text font-black text-[9px] uppercase tracking-wider px-2"
+        >
           {quality}
-        </div>
+        </Badge>
 
         {/* Huy hiệu Phụ đề - Góc trái phía dưới */}
-        <div className="absolute bottom-2.5 left-2.5 bg-black/75 backdrop-blur-md border border-themeBorder/40 text-text/90 text-[10px] font-bold px-2 py-0.5 rounded-sharp">
+        <Badge
+          variant="outline"
+          size="sm"
+          className="absolute bottom-2.5 left-2.5 bg-black/75 backdrop-blur-md border border-themeBorder/40 text-text/90 text-[10px]"
+        >
           {subtitleLabel}
-        </div>
+        </Badge>
 
         {/* Huy hiệu Phân loại Movie/TV - Góc phải phía dưới */}
-        <div className="absolute bottom-2.5 right-2.5 bg-black/60 backdrop-blur-sm text-gold text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-sharp border border-white/5">
+        <Badge
+          variant={isMovie ? "primary" : "gold"}
+          size="sm"
+          className="absolute bottom-2.5 right-2.5 bg-black/60 backdrop-blur-sm text-[9px] font-black uppercase tracking-wider px-1.5 border border-white/5"
+        >
           {isMovie ? "Phim lẻ" : "Phim bộ"}
-        </div>
+        </Badge>
 
         {/* LỚP PHỦ HOVER CHI TIẾT */}
         <div className="absolute inset-0 bg-background/85 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-4 text-center">
