@@ -1,8 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Library, Sparkles, Film, Tv, PlaySquare, X } from "lucide-react";
+import { Search, Library, Sparkles, Film, PlaySquare, X, RefreshCw } from "lucide-react";
 import { MovieCard, Button, SectionHeader, Container } from "../components";
-import { SAMPLE_MOVIES } from "../data/movies";
+import {
+  getNowPlayingMovies,
+  getPopularMovies,
+  getTopRatedMovies,
+  getUpcomingMovies
+} from "../services/movieApi";
+import { getNormalizedSampleMovies } from "../hooks/useMovies";
+import type { Movie } from "../types/movie";
+import type { NormalizedMovie } from "../types/api";
 
 interface LibraryTab {
   id: string;
@@ -11,50 +19,113 @@ interface LibraryTab {
 }
 
 /**
+ * Hàm hỗ trợ chuyển đổi dữ liệu phim đã chuẩn hóa (NormalizedMovie)
+ * sang định dạng hiển thị cũ (Movie) để đảm bảo không phá vỡ UI của MovieCard.
+ */
+const mapNormalizedToMovie = (normalized: NormalizedMovie): Movie => {
+  return {
+    id: normalized.id,
+    title: normalized.title,
+    originalTitle: normalized.originalTitle,
+    poster: normalized.posterUrl || "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&auto=format&fit=crop&q=80",
+    backdrop: normalized.backdropUrl || "https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=1600&auto=format&fit=crop&q=80",
+    year: normalized.year || 2026,
+    genre: normalized.genres.length > 0 ? normalized.genres : ["Đang cập nhật"],
+    rating: normalized.voteAverage,
+    duration: normalized.runtime ? `${Math.floor(normalized.runtime / 60)}h ${normalized.runtime % 60}m` : "2h 00m",
+    quality: normalized.quality || "FHD",
+    subtitle: normalized.subtitleLanguages.length > 0 ? normalized.subtitleLanguages[0] : "Vietsub",
+    description: normalized.overview || "Chưa có tóm tắt nội dung.",
+    views: normalized.voteCount * 123
+  };
+};
+
+/**
  * Phần "Khám Phá Thư Viện Phim" (Movie Library Preview Section).
- * - Sử dụng Container, SectionHeader, Button và MovieCard dùng chung.
+ * - Kết nối các tab tới các API danh sách phim tương ứng trên Backend Proxy.
+ * - Hỗ trợ tìm kiếm theo từ khóa trong danh mục.
+ * - Hiển thị Shimmer Skeleton khi tải dữ liệu, tự động kích hoạt bộ nhớ đệm (Cache) trên Backend.
  */
 export const MovieLibrary: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("new-releases");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  
+  // Các trạng thái dữ liệu API
+  const [movies, setMovies] = useState<NormalizedMovie[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
 
   const tabs: LibraryTab[] = [
     { id: "new-releases", label: "Mới Ra Mắt", icon: Sparkles },
-    { id: "movies", label: "Phim Điện Ảnh", icon: Film },
-    { id: "series", label: "Phim Bộ", icon: Tv },
-    { id: "anime", label: "Anime & Hoạt Hình", icon: PlaySquare },
-    { id: "tv-shows", label: "Chương Trình TV", icon: Library },
+    { id: "popular", label: "Phổ Biến", icon: Film },
+    { id: "top-rated", label: "Đánh Giá Cao", icon: Library },
+    { id: "upcoming", label: "Sắp Chiếu", icon: PlaySquare },
   ];
 
-  const getFilteredMovies = () => {
-    let list = [...SAMPLE_MOVIES];
-    
-    if (activeTab === "new-releases") {
-      list = list.filter((m) => m.year >= 2025);
-    } else if (activeTab === "movies") {
-      list = list.filter((m) => !m.genre.includes("Anime") && !m.genre.includes("Hoạt Hình") && !m.genre.includes("Tài Liệu"));
-    } else if (activeTab === "series") {
-      list = list.filter((m) => m.genre.includes("Hình Sự") || m.genre.includes("Tâm Lý"));
-    } else if (activeTab === "anime") {
-      list = list.filter((m) => m.genre.includes("Anime") || m.genre.includes("Hoạt Hình"));
-    } else if (activeTab === "tv-shows") {
-      list = list.filter((m) => m.genre.includes("Tài Liệu") || m.genre.includes("Vũ Trụ"));
+  /**
+   * Hàm gọi API tải dữ liệu phim theo Tab được kích hoạt.
+   * Nếu có lỗi kết nối, tự động chuyển về phân tách từ tập dữ liệu giả lập (Offline Fallback).
+   */
+  const fetchTabData = useCallback(async (tab: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      let response;
+      if (tab === "new-releases") {
+        response = await getNowPlayingMovies();
+      } else if (tab === "popular") {
+        response = await getPopularMovies();
+      } else if (tab === "top-rated") {
+        response = await getTopRatedMovies();
+      } else if (tab === "upcoming") {
+        response = await getUpcomingMovies();
+      } else {
+        response = await getNowPlayingMovies();
+      }
+      setMovies(response.data);
+    } catch (err: any) {
+      console.warn(`Lỗi tải dữ liệu cho tab ${tab}, chuyển sang chế độ ngoại tuyến:`, err);
+      setError(err instanceof Error ? err : new Error(String(err)));
+      
+      // Khởi tạo các mảng dữ liệu giả lập dự phòng phân vùng theo tab
+      const sample = getNormalizedSampleMovies();
+      if (tab === "new-releases") {
+        setMovies(sample.slice(0, 6));
+      } else if (tab === "popular") {
+        setMovies(sample.slice(2, 8));
+      } else if (tab === "top-rated") {
+        setMovies(sample.slice(4, 10));
+      } else if (tab === "upcoming") {
+        setMovies(sample.slice(1, 7));
+      } else {
+        setMovies(sample.slice(0, 6));
+      }
+    } finally {
+      setLoading(false);
     }
+  }, []);
 
+  // Tải lại dữ liệu mỗi khi người dùng thay đổi tab hoạt động
+  useEffect(() => {
+    fetchTabData(activeTab);
+  }, [activeTab, fetchTabData]);
+
+  // Áp dụng bộ lọc tìm kiếm trên dữ liệu đã tải về
+  const displayedMovies = useMemo(() => {
+    let list = [...movies];
+    
     if (searchQuery.trim() !== "") {
       const query = searchQuery.toLowerCase();
       list = list.filter(
         (m) =>
           m.title.toLowerCase().includes(query) ||
           m.originalTitle.toLowerCase().includes(query) ||
-          m.genre.some((g) => g.toLowerCase().includes(query))
+          m.genres.some((g) => g.toLowerCase().includes(query))
       );
     }
 
     return list.slice(0, 6);
-  };
-
-  const displayedMovies = getFilteredMovies();
+  }, [movies, searchQuery]);
 
   const containerVariants = {
     hidden: {},
@@ -80,7 +151,7 @@ export const MovieLibrary: React.FC = () => {
         accentIcon={<Library className="w-4 h-4 text-gold" />}
         accentText="Kho tài nguyên vô hạn"
         title="Thư Viện Điện Ảnh"
-        subtitle="Hội tụ phim điện ảnh mới nhất, phim bộ độc quyền, anime sống động tại một nơi duy nhất."
+        subtitle="Hội tụ phim điện ảnh mới nhất, danh sách thịnh hành và phim sắp chiếu rạp được làm mới liên tục."
       />
 
       {/* Thanh Điều khiển (Control Bar) */}
@@ -106,7 +177,7 @@ export const MovieLibrary: React.FC = () => {
           })}
         </div>
 
-        {/* Thanh tìm kiếm giả lập */}
+        {/* Thanh tìm kiếm */}
         <div className="relative w-full lg:max-w-xs xl:max-w-sm flex-shrink-0">
           <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted/60 pointer-events-none">
             <Search className="w-4 h-4" />
@@ -131,32 +202,62 @@ export const MovieLibrary: React.FC = () => {
 
       </div>
 
-      {/* Lưới phim */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 sm:gap-6"
-      >
-        <AnimatePresence mode="popLayout">
-          {displayedMovies.map((movie) => (
-            <motion.div
-              key={`${activeTab}-${movie.id}`}
-              layout
-              variants={itemVariants}
-              initial="hidden"
-              animate="visible"
-              exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.25 } }}
-              className="w-full"
-            >
-              <MovieCard movie={movie} />
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </motion.div>
+      {/* Hiển thị thông báo chế độ ngoại tuyến nếu API lỗi */}
+      {error && (
+        <div className="mb-8 px-5 py-3 bg-red-950/30 border border-red-500/20 text-red-400 text-xs rounded-sharp flex items-center justify-between gap-4 animate-fade-in">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-ping" />
+            <span>Đang hiển thị dữ liệu dự phòng ngoại tuyến của tab do mất kết nối máy chủ.</span>
+          </div>
+          <button 
+            onClick={() => fetchTabData(activeTab)} 
+            className="flex items-center gap-1 font-bold text-red-300 hover:text-red-200 transition-colors underline decoration-dotted"
+          >
+            <RefreshCw className="w-3 h-3" />
+            Thử lại
+          </button>
+        </div>
+      )}
 
-      {displayedMovies.length === 0 && (
+      {/* Lưới phim hoặc Khung xương tải dữ liệu */}
+      {loading ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 sm:gap-6">
+          {Array.from({ length: 6 }).map((_, idx) => (
+            <div key={`skeleton-lib-${idx}`} className="w-full">
+              <MovieCard loading={true} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 sm:gap-6"
+        >
+          <AnimatePresence mode="popLayout">
+            {displayedMovies.map((movie) => {
+              const movieProp = mapNormalizedToMovie(movie);
+              return (
+                <motion.div
+                  key={`${activeTab}-${movie.id}`}
+                  layout
+                  variants={itemVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.25 } }}
+                  className="w-full"
+                >
+                  <MovieCard movie={movieProp} />
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </motion.div>
+      )}
+
+      {!loading && displayedMovies.length === 0 && (
         <div className="flex flex-col items-center justify-center py-24 text-center border border-dashed border-themeBorder/60 rounded-sharp">
           <p className="text-muted text-sm max-w-xs">
             Không tìm thấy phim nào khớp với từ khoá <span className="text-text font-bold">"{searchQuery}"</span> hoặc trong danh mục đã chọn.
