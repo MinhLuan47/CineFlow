@@ -8,6 +8,7 @@ import { asyncHandler } from './utils/async-handler';
 import { errorMiddleware } from './middlewares/error.middleware';
 import { notFoundMiddleware } from './middlewares/not-found.middleware';
 import { tmdbService } from './services/tmdb.service';
+import { getCacheStats } from './utils/cache';
 
 const app = express();
 
@@ -54,13 +55,24 @@ if (env.NODE_ENV === 'development') {
   );
 }
 
-// Endpoint thử nghiệm cấu hình TMDB API kết nối thực tế
+// Endpoint thử nghiệm cấu hình TMDB API kết nối thực tế (Có tùy chọn dùng cache)
 app.get(
   '/api/tmdb/configuration',
   asyncHandler(async (req: Request, res: Response) => {
-    const configData = await tmdbService.get<any>('/configuration');
-    sendSuccess(res, configData, 'Kết nối và tải cấu hình TMDB thành công');
+    // Client có thể truyền ?useCache=false để bỏ qua cache và tải dữ liệu mới từ TMDB
+    const useCache = req.query.useCache !== 'false';
+    const { data, cached } = await tmdbService.get<any>('/configuration', {}, { useCache });
+    sendSuccess(res, data, 'Kết nối và tải cấu hình TMDB thành công', 200, { cached });
   })
+);
+
+// Endpoint lấy thông tin thống kê về bộ nhớ cache hiện tại
+app.get(
+  '/api/cache/stats',
+  (req: Request, res: Response) => {
+    const stats = getCacheStats();
+    sendSuccess(res, stats, 'Tải thống kê bộ nhớ cache thành công');
+  }
 );
 
 // Xử lý khi client truy cập các route không tồn tại (404 Not Found)

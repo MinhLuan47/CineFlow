@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosError } from 'axios';
 import { tmdbConfig } from '../config/tmdb';
 import { TmdbQueryParams } from '../types/tmdb.types';
 import { ApiError } from '../utils/response';
+import { buildCacheKey, getOrSetCache } from '../utils/cache';
 
 class TmdbService {
   private client: AxiosInstance;
@@ -20,26 +21,44 @@ class TmdbService {
 
   /**
    * Phương thức chung (generic method) để thực hiện các yêu cầu GET tới TMDB API.
-   * @param endpoint Đường dẫn API cụ thể trên TMDB (ví dụ: '/configuration', '/movie/popular')
+   * Có hỗ trợ tùy chọn cache để tăng tốc độ phản hồi và giảm số lượng request gọi lên TMDB.
+   * @param endpoint Đường dẫn API cụ thể trên TMDB (ví dụ: '/configuration')
    * @param params Bộ tham số truy vấn bổ sung (language, region, page, query, v.v.)
+   * @param options Các tùy chọn về cache (useCache: có dùng cache không, ttlSeconds: thời gian cache tùy chỉnh)
    */
-  async get<T>(endpoint: string, params: TmdbQueryParams = {}): Promise<T> {
-    try {
-      // Thiết lập cấu hình mặc định (ví dụ mặc định lấy ngôn ngữ vi-VN nếu không truyền vào)
-      const queryParams = {
-        language: 'vi-VN',
-        ...params
-      };
+  async get<T>(
+    endpoint: string,
+    params: TmdbQueryParams = {},
+    options: { useCache?: boolean; ttlSeconds?: number } = {}
+  ): Promise<{ data: T; cached: boolean }> {
+    const { useCache = false, ttlSeconds } = options;
 
-      const response = await this.client.get<T>(endpoint, {
-        params: queryParams
-      });
+    const queryParams = {
+      language: 'vi-VN',
+      ...params
+    };
 
-      return response.data;
-    } catch (error: any) {
-      // Bắt lỗi và chuyển đổi sang ApiError thống nhất cho hệ thống
-      this.handleError(error);
+    // Hàm gọi API thực tế tới TMDB máy chủ
+    const fetchFromServer = async (): Promise<T> => {
+      try {
+        const response = await this.client.get<T>(endpoint, {
+          params: queryParams
+        });
+        return response.data;
+      } catch (error: any) {
+        this.handleError(error);
+      }
+    };
+
+    // Nếu kích hoạt cache, sử dụng bộ getOrSetCache
+    if (useCache) {
+      const cacheKey = buildCacheKey(endpoint, queryParams);
+      return getOrSetCache<T>(cacheKey, fetchFromServer, ttlSeconds);
     }
+
+    // Nếu không dùng cache, gọi trực tiếp từ TMDB và trả về cached: false
+    const freshData = await fetchFromServer();
+    return { data: freshData, cached: false };
   }
 
   /**
