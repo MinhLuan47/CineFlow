@@ -10,34 +10,8 @@ import {
 } from '../services/movieApi';
 import { useMovies } from '../hooks/useMovies';
 import { MovieCard, LoadingState, ErrorState, EmptyState, Pagination } from '../components';
-import type { Movie } from '../types/movie';
 import type { NormalizedMovie } from '../types/api';
-
-/**
- * Hàm hỗ trợ chuyển đổi dữ liệu phim đã chuẩn hóa (NormalizedMovie)
- * sang định dạng hiển thị cũ (Movie) để đảm bảo không phá vỡ UI của MovieCard.
- */
-const mapNormalizedToMovie = (normalized: NormalizedMovie): Movie => {
-    return {
-        id: normalized.id,
-        title: normalized.title,
-        originalTitle: normalized.originalTitle,
-        poster:
-            normalized.posterUrl ||
-            'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&auto=format&fit=crop&q=80',
-        backdrop:
-            normalized.backdropUrl ||
-            'https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=1600&auto=format&fit=crop&q=80',
-        year: normalized.year || 2026,
-        genre: normalized.genres.length > 0 ? normalized.genres : ['Đang cập nhật'],
-        rating: normalized.voteAverage,
-        duration: normalized.runtime ? `${Math.floor(normalized.runtime / 60)}h ${normalized.runtime % 60}m` : '2h 00m',
-        quality: normalized.quality || 'FHD',
-        subtitle: normalized.subtitleLanguages.length > 0 ? normalized.subtitleLanguages[0] : 'Vietsub',
-        description: normalized.overview || 'Chưa có tóm tắt nội dung.',
-        views: normalized.voteCount * 123, // Tạo lượt xem giả lập dựa trên lượt vote
-    };
-};
+import { mapNormalizedToMovie } from '../utils/movieMapper';
 
 /**
  * MoviesPage - Trang khám phá và phân loại danh sách phim điện ảnh kết nối API.

@@ -3,36 +3,8 @@ import { useSearchParams, Link } from "react-router-dom";
 import { Search, Film, Tv, Users, ArrowLeft } from "lucide-react";
 import { searchMulti } from "../services/searchApi";
 import { MovieCard, LoadingState, ErrorState, EmptyState, Pagination } from "../components";
-import type { Movie } from "../types/movie";
 import type { NormalizedMovie, NormalizedTvSeries, SearchResult } from "../types/api";
-
-/**
- * Hàm hỗ trợ chuyển đổi dữ liệu tìm kiếm Phim điện ảnh / Phim truyền hình đã chuẩn hóa
- * sang định dạng hiển thị cũ (Movie) để sử dụng với component MovieCard.
- */
-const mapNormalizedToMovie = (normalized: NormalizedMovie | NormalizedTvSeries): Movie => {
-  const isMovie = normalized.mediaType === "movie";
-  const movieItem = normalized as NormalizedMovie;
-  return {
-    id: normalized.id,
-    title: isMovie ? movieItem.title : (normalized as NormalizedTvSeries).name,
-    originalTitle: isMovie ? movieItem.originalTitle : (normalized as NormalizedTvSeries).originalName,
-    poster: normalized.posterUrl || "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&auto=format&fit=crop&q=80",
-    backdrop: normalized.backdropUrl || "https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=1600&auto=format&fit=crop&q=80",
-    year: normalized.year || 2026,
-    genre: normalized.genres.length > 0 ? normalized.genres : ["Đang cập nhật"],
-    rating: normalized.voteAverage,
-    duration: isMovie && movieItem.runtime
-      ? `${Math.floor(movieItem.runtime / 60)}h ${movieItem.runtime % 60}m`
-      : "Đang cập nhật",
-    quality: isMovie ? movieItem.quality || "FHD" : "FHD",
-    subtitle: isMovie && movieItem.subtitleLanguages && movieItem.subtitleLanguages.length > 0
-      ? movieItem.subtitleLanguages[0]
-      : "Vietsub",
-    description: normalized.overview || "Chưa có tóm tắt nội dung.",
-    views: normalized.voteCount * 123
-  };
-};
+import { mapNormalizedToMovie } from "../utils/movieMapper";
 
 /**
  * SearchPage - Trang tìm kiếm phim điện ảnh & phim truyền hình nâng cao kết nối API Backend.
