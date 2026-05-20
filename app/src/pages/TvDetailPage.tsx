@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Play, Star, Heart, Calendar, Clock, ArrowLeft, Check, Users, Film, Sparkles, Tv } from "lucide-react";
 import {
@@ -8,6 +8,7 @@ import {
   useTvSimilar
 } from "../hooks/useTvDetail";
 import { MediaCard, LoadingState, ErrorState } from "../components";
+import { useWatchlist } from "../hooks/useWatchlist";
 
 /**
  * TvDetailPage - Trang hiển thị chi tiết phim truyền hình dài tập (TV Series Detail Page).
@@ -22,54 +23,22 @@ export const TvDetailPage: React.FC = () => {
   const { data: recommendations, loading: recsLoading } = useTvRecommendations(tvId);
   const { data: similar, loading: similarLoading } = useTvSimilar(tvId);
 
-  // Trạng thái Watchlist trong localStorage
-  const [isInWatchlist, setIsInWatchlist] = useState<boolean>(false);
+  // Quản lý trạng thái Watchlist sử dụng custom hook
+  const { addToWatchlist, removeFromWatchlist, isInWatchlist: checkWatchlist } = useWatchlist();
+  const isInWatchlist = checkWatchlist(tvShow?.id || "");
 
   // Cuộn lên đầu trang mỗi khi xem phim bộ khác
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [tvId]);
 
-  // Kiểm tra trạng thái thích trong localStorage
-  useEffect(() => {
-    if (!tvId) return;
-    try {
-      const watchlist = JSON.parse(localStorage.getItem("cineflow_watchlist") || "[]");
-      setIsInWatchlist(watchlist.some((item: any) => String(item.id) === String(tvId)));
-    } catch (e) {
-      console.error("Lỗi khi đọc Watchlist từ localStorage:", e);
-    }
-  }, [tvId]);
-
   // Thêm/Xóa phim khỏi danh sách yêu thích
   const handleToggleWatchlist = () => {
     if (!tvShow) return;
-    try {
-      const watchlist = JSON.parse(localStorage.getItem("cineflow_watchlist") || "[]");
-      let updatedWatchlist;
-      
-      if (isInWatchlist) {
-        updatedWatchlist = watchlist.filter((item: any) => String(item.id) !== String(tvId));
-      } else {
-        updatedWatchlist = [
-          ...watchlist,
-          {
-            id: tvShow.id,
-            title: tvShow.name,
-            originalTitle: tvShow.originalName,
-            posterUrl: tvShow.posterUrl,
-            voteAverage: tvShow.voteAverage,
-            year: tvShow.year,
-            genres: tvShow.genres,
-            mediaType: "tv"
-          }
-        ];
-      }
-      
-      localStorage.setItem("cineflow_watchlist", JSON.stringify(updatedWatchlist));
-      setIsInWatchlist(!isInWatchlist);
-    } catch (e) {
-      console.error("Lỗi cập nhật Watchlist:", e);
+    if (isInWatchlist) {
+      removeFromWatchlist(tvShow.id);
+    } else {
+      addToWatchlist(tvShow);
     }
   };
 

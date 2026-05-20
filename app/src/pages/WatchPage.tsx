@@ -14,6 +14,7 @@ import {
   useTvSimilar
 } from "../hooks/useTvDetail";
 import { ErrorState } from "../components";
+import { useWatchHistory } from "../hooks/useWatchHistory";
 
 /**
  * WatchPage - Trang chiếu trailer phim lẻ và phim bộ chuẩn CineFlow.
@@ -55,6 +56,15 @@ export const WatchPage: React.FC = () => {
   const activeLoading = isTv ? tvLoading : movieLoading;
   const activeError = isTv ? tvError : movieError;
   const refetchActive = isTv ? refetchTv : refetchMovie;
+
+  const { addToHistory } = useWatchHistory();
+
+  // Tự động lưu vào lịch sử xem khi phim được tải thành công
+  useEffect(() => {
+    if (activeItem) {
+      addToHistory(activeItem);
+    }
+  }, [activeItem, addToHistory]);
 
   const typeLabel = isTv ? "Phim Bộ" : "Phim Lẻ";
 

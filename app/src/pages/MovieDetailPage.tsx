@@ -9,6 +9,7 @@ import {
   useSimilarMovies
 } from "../hooks/useMovieDetail";
 import { MovieCard, LoadingState, ErrorState } from "../components";
+import { useWatchlist } from "../hooks/useWatchlist";
 import type { Movie } from "../types/movie";
 import type { NormalizedMovie } from "../types/api";
 
@@ -51,56 +52,22 @@ export const MovieDetailPage: React.FC = () => {
   // Trạng thái mở/đóng Modal Trailer YouTube
   const [isTrailerOpen, setIsTrailerOpen] = useState<boolean>(false);
   
-  // Trạng thái yêu thích (Watchlist) sử dụng localStorage
-  const [isInWatchlist, setIsInWatchlist] = useState<boolean>(false);
+  // Quản lý trạng thái yêu thích (Watchlist) sử dụng custom hook
+  const { addToWatchlist, removeFromWatchlist, isInWatchlist: checkWatchlist } = useWatchlist();
+  const isInWatchlist = checkWatchlist(movie?.id || "");
 
   // Cuộn lên đầu trang mỗi khi ID phim thay đổi (người dùng bấm phim gợi ý)
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [movieId]);
 
-  // Kiểm tra xem phim đã có trong danh sách yêu thích (Watchlist) chưa
-  useEffect(() => {
-    if (!movieId) return;
-    try {
-      const watchlist = JSON.parse(localStorage.getItem("cineflow_watchlist") || "[]");
-      setIsInWatchlist(watchlist.some((item: any) => String(item.id) === String(movieId)));
-    } catch (e) {
-      console.error("Lỗi khi đọc Watchlist từ localStorage:", e);
-    }
-  }, [movieId]);
-
   // Thêm/Xóa phim khỏi danh sách yêu thích
   const handleToggleWatchlist = () => {
     if (!movie) return;
-    try {
-      const watchlist = JSON.parse(localStorage.getItem("cineflow_watchlist") || "[]");
-      let updatedWatchlist;
-      
-      if (isInWatchlist) {
-        // Xóa phim khỏi Watchlist
-        updatedWatchlist = watchlist.filter((item: any) => String(item.id) !== String(movieId));
-      } else {
-        // Thêm phim vào Watchlist
-        updatedWatchlist = [
-          ...watchlist,
-          {
-            id: movie.id,
-            title: movie.title,
-            originalTitle: movie.originalTitle,
-            posterUrl: movie.posterUrl,
-            voteAverage: movie.voteAverage,
-            year: movie.year,
-            genres: movie.genres,
-            mediaType: "movie"
-          }
-        ];
-      }
-      
-      localStorage.setItem("cineflow_watchlist", JSON.stringify(updatedWatchlist));
-      setIsInWatchlist(!isInWatchlist);
-    } catch (e) {
-      console.error("Lỗi cập nhật Watchlist:", e);
+    if (isInWatchlist) {
+      removeFromWatchlist(movie.id);
+    } else {
+      addToWatchlist(movie);
     }
   };
 
