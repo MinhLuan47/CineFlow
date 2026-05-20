@@ -101,4 +101,5 @@ export interface ApiQueryParams {
   page?: number;
   language?: string;
   region?: string;
+  sortBy?: string;
 }
