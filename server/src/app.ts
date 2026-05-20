@@ -9,6 +9,7 @@ import { errorMiddleware } from './middlewares/error.middleware';
 import { notFoundMiddleware } from './middlewares/not-found.middleware';
 import { tmdbService } from './services/tmdb.service';
 import { getCacheStats } from './utils/cache';
+import movieRouter from './routes/movie.routes';
 
 const app = express();
 
@@ -74,6 +75,9 @@ app.get(
     sendSuccess(res, stats, 'Tải thống kê bộ nhớ cache thành công');
   }
 );
+
+// Gắn bộ định tuyến cho các API phim (Movie Endpoints)
+app.use('/api/movies', movieRouter);
 
 // Xử lý khi client truy cập các route không tồn tại (404 Not Found)
 app.use(notFoundMiddleware);
