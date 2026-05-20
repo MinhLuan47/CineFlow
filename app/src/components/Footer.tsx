@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Film } from 'lucide-react';
 
 /**
@@ -14,28 +15,28 @@ export const Footer: React.FC = () => {
         {
             title: 'Thể loại phim',
             links: [
-                { name: 'Phim Hành Động', href: '#' },
-                { name: 'Khoa Học Viễn Tưởng', href: '#' },
-                { name: 'Kinh Dị & Giật Gân', href: '#' },
-                { name: 'Hài Hước & Tâm Lý', href: '#' },
-                { name: 'Hoạt Hình Anime', href: '#' },
+                { name: 'Phim Hành Động', to: '/genre/movie/28' },
+                { name: 'Khoa Học Viễn Tưởng', to: '/genre/movie/878' },
+                { name: 'Kinh Dị & Giật Gân', to: '/genre/movie/27' },
+                { name: 'Hài Hước & Tâm Lý', to: '/genre/movie/35' },
+                { name: 'Hoạt Hình Anime', to: '/genre/movie/16' },
             ],
         },
         {
             title: 'Hỗ trợ khách hàng',
             links: [
-                { name: 'Trung tâm trợ giúp', href: '#' },
-                { name: 'Câu hỏi thường gặp (FAQ)', href: '#' },
-                { name: 'Điều khoản sử dụng', href: '#' },
-                { name: 'Chính sách bảo mật', href: '#' },
-                { name: 'Liên hệ quảng cáo', href: '#' },
+                { name: 'Trung tâm trợ giúp', to: '/support/help-center' },
+                { name: 'Câu hỏi thường gặp (FAQ)', to: '/support/faq' },
+                { name: 'Điều khoản sử dụng', to: '/support/terms' },
+                { name: 'Chính sách bảo mật', to: '/support/privacy' },
+                { name: 'Liên hệ quảng cáo', to: '/support/contact' },
             ],
         },
         {
             title: 'Dịch vụ của chúng tôi',
             links: [
-                { name: 'Thiết bị tương thích', href: '#' },
-                { name: 'Blog Điện Ảnh', href: '#' },
+                { name: 'Thiết bị tương thích', to: '/services/devices' },
+                { name: 'Blog Điện Ảnh', to: '/services/blog' },
             ],
         },
     ];
@@ -49,7 +50,7 @@ export const Footer: React.FC = () => {
             <div className="container-custom grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 mb-12">
                 {/* Cột 1: Logo & Giới thiệu tóm tắt */}
                 <div className="flex flex-col gap-5">
-                    <a href="/" className="flex items-center gap-2 group w-fit">
+                    <Link to="/" className="flex items-center gap-2 group w-fit">
                         <Film className="w-7 h-7 text-primary group-hover:text-gold transition-colors duration-300" />
                         <span className="font-display font-extrabold text-xl tracking-tighter uppercase text-text">
                             CINE
@@ -57,7 +58,7 @@ export const Footer: React.FC = () => {
                                 FLOW
                             </span>
                         </span>
-                    </a>
+                    </Link>
                     <p className="text-sm text-muted leading-relaxed">
                         CineFlow mang rạp chiếu phim chất lượng tối cao về ngôi nhà của bạn. Trải nghiệm âm thanh vòm
                         đỉnh cao và hình ảnh 4K HDR tuyệt mỹ không giới hạn.
@@ -101,11 +102,17 @@ export const Footer: React.FC = () => {
                             {section.title}
                         </h3>
                         <ul className="flex flex-col gap-3 text-sm">
-                            {section.links.map((link) => (
+                            {section.links.map((link: { name: string; to?: string; href?: string }) => (
                                 <li key={link.name}>
-                                    <a href={link.href} className="text-muted hover:text-primary transition-colors">
-                                        {link.name}
-                                    </a>
+                                    {link.to ? (
+                                        <Link to={link.to} className="text-muted hover:text-primary transition-colors">
+                                            {link.name}
+                                        </Link>
+                                    ) : (
+                                        <a href={link.href || '#'} className="text-muted hover:text-primary transition-colors">
+                                            {link.name}
+                                        </a>
+                                    )}
                                 </li>
                             ))}
                         </ul>

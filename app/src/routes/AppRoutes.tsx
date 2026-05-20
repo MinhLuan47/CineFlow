@@ -13,6 +13,15 @@ import TvDetailPage from "../pages/TvDetailPage";
 import WatchPage from "../pages/WatchPage";
 import WatchlistPage from "../pages/WatchlistPage";
 import NotFoundPage from "../pages/NotFoundPage";
+import {
+  HelpCenterPage,
+  FaqPage,
+  TermsPage,
+  PrivacyPage,
+  ContactPage,
+  DevicesPage,
+  BlogPage
+} from "../pages/SupportPages";
 
 /**
  * AppRoutes - Định nghĩa tất cả các tuyến đường (routes) trong ứng dụng CineFlow.
@@ -54,6 +63,17 @@ export const AppRoutes: React.FC = () => {
 
         {/* Watchlist cá nhân */}
         <Route path="/watchlist" element={<WatchlistPage />} />
+
+        {/* Hỗ trợ khách hàng */}
+        <Route path="/support/help-center" element={<HelpCenterPage />} />
+        <Route path="/support/faq" element={<FaqPage />} />
+        <Route path="/support/terms" element={<TermsPage />} />
+        <Route path="/support/privacy" element={<PrivacyPage />} />
+        <Route path="/support/contact" element={<ContactPage />} />
+
+        {/* Dịch vụ của chúng tôi */}
+        <Route path="/services/devices" element={<DevicesPage />} />
+        <Route path="/services/blog" element={<BlogPage />} />
 
         {/* Trang báo lỗi 404 */}
         <Route path="*" element={<NotFoundPage />} />
