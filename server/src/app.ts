@@ -2,10 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import dotenv from 'dotenv';
-
-// Tải các biến môi trường từ file .env
-dotenv.config();
+import { env } from './config/env';
 
 const app = express();
 
@@ -16,10 +13,9 @@ const app = express();
 app.use(helmet());
 
 // Cấu hình CORS để xác định các domain (nguồn) nào được phép truy cập tài nguyên của API này.
-// Trong môi trường development, chúng ta cho phép origin từ biến môi trường (mặc định là frontend Vite chạy ở port 5173).
-const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:5173';
+// Sử dụng CLIENT_URL đã được xác thực từ cấu hình hệ thống.
 app.use(cors({
-  origin: corsOrigin,
+  origin: env.CLIENT_URL,
   credentials: true // Cho phép gửi cookies/headers xác thực nếu có
 }));
 
@@ -54,7 +50,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   
   res.status(err.status || 500).json({
     success: false,
-    message: process.env.NODE_ENV === 'production' 
+    message: env.NODE_ENV === 'production' 
       ? 'Đã xảy ra lỗi hệ thống phía server' 
       : err.message || 'Lỗi hệ thống'
   });

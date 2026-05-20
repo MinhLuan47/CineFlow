@@ -1,9 +1,10 @@
 import app from './app';
+import { env } from './config/env';
 
-const PORT = process.env.PORT || 5000;
+const PORT = env.PORT;
 
 const server = app.listen(PORT, () => {
-  console.log(`[SERVER]: Server đang chạy thành công tại cổng ${PORT} trong chế độ ${process.env.NODE_ENV}`);
+  console.log(`[SERVER]: Server đang chạy thành công tại cổng ${PORT} trong chế độ ${env.NODE_ENV}`);
 });
 
 // --- PHÒNG CHỐNG CRASH HỆ THỐNG (GRACEFUL SHUTDOWN / ERROR HANDLING) ---
