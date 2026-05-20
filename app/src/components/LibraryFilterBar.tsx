@@ -1,6 +1,6 @@
 import React from "react";
 import { Search, X } from "lucide-react";
-import { Button } from "./Button";
+import { Button } from "./ui/Button";
 
 export interface LibraryTab {
   id: string;

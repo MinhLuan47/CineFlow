@@ -1,12 +1,11 @@
 import React from "react";
+import { cn } from "../../lib/cn";
 
-interface ContainerProps {
+interface ContainerProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode;
-  as?: "section" | "div";
+  as?: "section" | "div" | "main" | "header" | "footer";
   py?: "sm" | "md" | "lg" | "none";
   borderTop?: boolean;
-  className?: string;
-  id?: string;
 }
 
 export const Container: React.FC<ContainerProps> = ({
@@ -14,8 +13,8 @@ export const Container: React.FC<ContainerProps> = ({
   as: Component = "section",
   py = "md",
   borderTop = false,
-  className = "",
-  id,
+  className,
+  ...props
 }) => {
   const pyClasses = {
     none: "",
@@ -24,12 +23,15 @@ export const Container: React.FC<ContainerProps> = ({
     lg: "py-20 md:py-32",
   };
 
-  const borderClass = borderTop ? "border-t border-themeBorder/40" : "";
-
   return (
     <Component
-      id={id}
-      className={`container-custom relative z-20 ${borderClass} ${pyClasses[py]} ${className}`}
+      className={cn(
+        "container-custom relative z-20",
+        borderTop && "border-t border-themeBorder/40",
+        pyClasses[py],
+        className
+      )}
+      {...props}
     >
       {children}
     </Component>

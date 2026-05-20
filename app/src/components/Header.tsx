@@ -2,7 +2,7 @@ import { Compass, Film, LogIn, Menu, Play, Tv, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
-import { Button } from './Button';
+import { Button } from './ui/Button';
 import { GlobalSearch } from './GlobalSearch';
 
 /**
