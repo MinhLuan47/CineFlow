@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect, useState } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
-import { Play, ArrowLeft, Tv, Film, Star, Share2, Info, Calendar, Clock, AlertCircle } from "lucide-react";
+import { ArrowLeft, Film, Share2, Info } from "lucide-react";
 import {
   useMovieDetail,
   useMovieVideos,
@@ -13,7 +13,12 @@ import {
   useTvRecommendations,
   useTvSimilar
 } from "../hooks/useTvDetail";
-import { ErrorState } from "../components";
+import { 
+  ErrorState, 
+  WatchEpisodeSelector, 
+  RelatedMediaSidebar, 
+  WatchMediaInfo 
+} from "../components";
 import { useWatchHistory } from "../hooks/useWatchHistory";
 
 /**
@@ -187,73 +192,12 @@ export const WatchPage: React.FC = () => {
           </div>
 
           {/* Tiêu đề & Thông tin nhanh bên dưới trình phát */}
-          <div className="mt-6">
-            <div className="flex items-center gap-2">
-              <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-sharp ${
-                isTv ? "bg-gold/10 border border-gold/20 text-gold" : "bg-primary/10 border border-primary/20 text-primary"
-              }`}>
-                {typeLabel}
-              </span>
-              <span className="text-xs text-muted">ID: #{activeItem.id}</span>
-            </div>
-            
-            <h1 className="font-display font-extrabold text-2xl md:text-4xl mt-3 text-text leading-tight">
-              {isTv ? (activeItem as any).name : (activeItem as any).title}
-            </h1>
-            <h2 className="text-sm text-muted font-medium italic mt-1.5">
-              {isTv ? (activeItem as any).originalName : (activeItem as any).originalTitle} {activeItem.year ? `(${activeItem.year})` : ""}
-            </h2>
-            
-            <div className="flex flex-wrap items-center gap-y-2 gap-x-4 md:gap-x-6 mt-5 text-xs text-muted border-b border-themeBorder/20 pb-6 font-bold">
-              <div className="flex items-center gap-1 text-gold bg-gold/15 border border-gold/20 px-2 py-0.5 rounded-sharp">
-                <Star className="w-3.5 h-3.5 fill-current" />
-                <span className="text-text">{activeItem.voteAverage ? activeItem.voteAverage.toFixed(1) : "0.0"} IMDb</span>
-              </div>
-              <span className="text-muted/50">•</span>
-              
-              <div className="flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5 text-gold" />
-                <span>{isTv ? (activeItem as any).firstAirDate : (activeItem as any).releaseDate}</span>
-              </div>
-              <span className="text-muted/50">•</span>
-
-              <div className="flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-gold" />
-                <span>{formattedRuntime}</span>
-              </div>
-            </div>
-
-            {/* Thể loại */}
-            <div className="flex flex-wrap items-center gap-2 mt-4">
-              {activeItem.genres.map((genreName, idx) => (
-                <span
-                  key={idx}
-                  className="text-[11px] font-bold bg-surface border border-themeBorder/60 px-2.5 py-0.5 rounded-sharp text-text"
-                >
-                  {genreName}
-                </span>
-              ))}
-            </div>
-
-            {/* Mô tả cốt truyện */}
-            <div className="mt-8">
-              <h3 className="text-xs font-black uppercase text-gold tracking-widest mb-2">Tóm tắt nội dung</h3>
-              <p className="text-sm md:text-base text-muted leading-relaxed font-medium">
-                {activeItem.overview || "Nội dung tóm tắt hiện đang được cập nhật..."}
-              </p>
-            </div>
-
-            {/* Cảnh báo mô phỏng */}
-            <div className="mt-8 p-4 bg-surface border border-themeBorder/40 rounded-sharp flex gap-3 items-start">
-              <AlertCircle className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
-              <div>
-                <h4 className="text-xs font-bold text-text uppercase tracking-wide">Lưu ý mô phỏng trình phát</h4>
-                <p className="text-[11px] text-muted leading-relaxed mt-1">
-                  Trang chiếu phim đang chạy ở chế độ nhúng Trailer bản quyền chính thức từ TMDB. CineFlow cam kết tuân thủ nghiêm ngặt bản quyền số, không lưu trữ hoặc truyền phát lậu phim thương mại có bản quyền.
-                </p>
-              </div>
-            </div>
-          </div>
+          <WatchMediaInfo
+            activeItem={activeItem}
+            isTv={isTv}
+            typeLabel={typeLabel}
+            formattedRuntime={formattedRuntime}
+          />
         </div>
 
         {/* CỘT BÊN PHẢI (SIDE PANEL): Tập phim & Đề xuất */}
@@ -261,86 +205,15 @@ export const WatchPage: React.FC = () => {
           
           {/* A. Dành riêng cho Phim Bộ: Danh sách Tập phim giả lập */}
           {isTv && (
-            <div className="border border-themeBorder bg-surface p-6 rounded-sharp text-left shadow-xl">
-              <h2 className="font-display font-bold text-base text-text mb-4 flex items-center gap-2">
-                <Tv className="w-5 h-5 text-gold" />
-                <span>Danh sách tập phim</span>
-              </h2>
-
-              {/* Tính toán hiển thị số lượng tập từ dữ liệu thực tế */}
-              <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 max-h-64 overflow-y-auto pr-1">
-                {Array.from({ length: Math.min((activeItem as any).numberOfEpisodes || 12, 24) }).map((_, idx) => {
-                  const epNum = idx + 1;
-                  const isActive = activeEpisode === epNum;
-                  return (
-                    <button
-                      key={idx}
-                      onClick={() => setActiveEpisode(epNum)}
-                      className={`h-9 text-xs font-bold rounded-sharp border transition-all ${
-                        isActive
-                          ? "bg-gold border-gold text-background shadow-lg shadow-gold/15"
-                          : "bg-background border-themeBorder text-text hover:border-gold/60"
-                      }`}
-                    >
-                      Tập {epNum}
-                    </button>
-                  );
-                })}
-              </div>
-              
-              <div className="mt-4 text-[10px] text-muted italic text-center">
-                Mô phỏng phát sóng Mùa 1 - Tập {activeEpisode}
-              </div>
-            </div>
+            <WatchEpisodeSelector
+              numberOfEpisodes={(activeItem as any).numberOfEpisodes}
+              activeEpisode={activeEpisode}
+              onEpisodeChange={setActiveEpisode}
+            />
           )}
 
           {/* B. Đề xuất phim chiếu tiếp */}
-          <div className="border border-themeBorder bg-surface p-6 rounded-sharp text-left shadow-xl">
-            <h2 className="font-display font-bold text-base text-text mb-5 flex items-center gap-2">
-              <Film className="w-5 h-5 text-gold" />
-              <span>Nội dung tương tự</span>
-            </h2>
-
-            {relatedList && relatedList.length > 0 ? (
-              <div className="space-y-4">
-                {relatedList.map((item) => (
-                  <Link
-                    key={item.id}
-                    to={`/watch/${isTv ? "tv" : "movie"}/${item.id}`}
-                    className="flex gap-3 p-2 hover:bg-background/80 border border-transparent hover:border-themeBorder rounded-sharp transition-all group"
-                  >
-                    {/* Poster nhỏ */}
-                    <div className="w-16 aspect-[2/3] bg-themeBorder rounded-sharp overflow-hidden flex-shrink-0 relative">
-                      <img
-                        src={item.posterUrl || "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=120&auto=format&fit=crop&q=80"}
-                        alt={isTv ? (item as any).name : (item as any).title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <Play className="w-4 h-4 text-gold fill-current" />
-                      </div>
-                    </div>
-
-                    {/* Chi tiết text nhỏ */}
-                    <div className="flex-1 min-w-0 pt-0.5">
-                      <h4 className="text-xs font-bold text-text truncate group-hover:text-gold transition-colors">
-                        {isTv ? (item as any).name : (item as any).title}
-                      </h4>
-                      <span className="text-[10px] text-muted block mt-1">
-                        {item.year || "2026"} • {isTv ? "Phim Bộ" : "Phim Lẻ"}
-                      </span>
-                      <div className="flex items-center gap-1 text-gold text-[10px] font-black mt-2">
-                        <Star className="w-3 h-3 fill-current" />
-                        <span>{item.voteAverage ? item.voteAverage.toFixed(1) : "0.0"}</span>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <p className="text-xs text-muted">Hiện chưa có phim đề cử tương tự.</p>
-            )}
-          </div>
+          <RelatedMediaSidebar relatedList={relatedList} isTv={isTv} />
 
           {/* C. Các hành động hỗ trợ phụ */}
           <div className="flex gap-3">

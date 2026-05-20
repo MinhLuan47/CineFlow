@@ -22,4 +22,9 @@ export { CastGrid } from "./CastGrid";
 export { TrailerModal } from "./TrailerModal";
 export { SearchFilterTabs } from "./SearchFilterTabs";
 export { SearchResultsGrid } from "./SearchResultsGrid";
+export { PlayerControls } from "./PlayerControls";
+export { GlobalSearch } from "./GlobalSearch";
+export { WatchEpisodeSelector } from "./WatchEpisodeSelector";
+export { RelatedMediaSidebar } from "./RelatedMediaSidebar";
+export { WatchMediaInfo } from "./WatchMediaInfo";
 
