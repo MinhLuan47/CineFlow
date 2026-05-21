@@ -156,7 +156,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({
   return (
     <div
       ref={searchRef}
-      className="hidden md:block relative w-48 lg:w-64 xl:w-72 z-50"
+      className="hidden md:block relative md:w-80 lg:w-64 xl:w-72 focus-within:md:w-[350px] focus-within:lg:w-80 focus-within:xl:w-96 transition-all duration-300 z-50"
     >
       <div className="relative">
         <span className="absolute z-10 left-3 top-1/2 -translate-y-1/2 text-muted/60">
