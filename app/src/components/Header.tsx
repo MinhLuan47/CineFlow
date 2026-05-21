@@ -52,7 +52,11 @@ export const Header: React.FC = () => {
             <div className="container-custom flex items-center justify-between gap-4">
                 {/* Logo CineFlow phong cách cinematic */}
                 <Link to="/" className="flex items-center gap-2 group z-50 flex-shrink-0">
-                    <Film className="w-8 h-8 text-primary group-hover:text-gold transition-colors duration-300" />
+                    <img 
+                        src="/logo.svg" 
+                        alt="CineFlow Logo" 
+                        className="w-8 h-8 object-contain group-hover:scale-105 transition-transform duration-300" 
+                    />
                     <span className="font-display font-extrabold text-2xl tracking-tighter uppercase text-text">
                         CINE
                         <span className="text-primary group-hover:text-gold transition-colors duration-300">FLOW</span>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <!-- Grad màu đỏ cho biểu tượng chính -->
+    <linearGradient id="primary-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E50914" />
+      <stop offset="100%" stop-color="#B91C1C" />
+    </linearGradient>
+    <!-- Grad màu vàng cho các nét lượn sóng -->
+    <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+  </defs>
+  <!-- Biểu tượng chữ C cách điệu kết hợp cuộn phim và làn sóng -->
+  <path d="M 75 25 C 50 10, 20 20, 20 50 C 20 80, 50 90, 75 75 C 65 75, 35 75, 35 50 C 35 25, 65 25, 75 25 Z" fill="url(#primary-grad)" />
+  <!-- Nét uốn lượn sóng màu vàng phía trong, biểu trưng cho chữ F (Flow) hoặc dòng chảy điện ảnh -->
+  <path d="M 45 35 C 55 35, 75 42, 85 50 C 70 58, 55 65, 45 65 C 52 58, 52 42, 45 35 Z" fill="url(#gold-grad)" />
+  <!-- Nút Play ở trung tâm tâm điểm để nhấn mạnh điện ảnh -->
+  <polygon points="50,42 66,50 50,58" fill="#FFFFFF" />
+</svg>
